@@ -1,7 +1,7 @@
 
 # CC41 USER MANUAL 
 
-## Version 0.42 Alpha DECIMAL
+## Version 0.42.01 Alpha DECIMAL
 
 Copyright (C) 2023 Craig Bladow.  All rights reserved.
 
@@ -108,16 +108,17 @@ SIZE has no affect as data memory size is fixed to 1000.
 SIZE? always returns 1000.
 User Flags number 0-63.
 Stack indirection, STO IND ST X and STO IND X will both work exactly the same.  CC41 will list commands referencing stack registers without ‘ST’.
-There is no need for an ALPHA, USER or PRGM mode with CC41.  Alpha text is entered directly, there is no User mode and programs are edited in your favorite text editor.
+There is no need for ALPHA or PRGM mode with CC41.  Alpha text is entered directly between double quotes and programs are edited in your favorite text editor.
 The functions of the R/S key are replaced by the commands RUN and STOP.
 There are no key assignments in CC41.
 PRSTK prints x, y, z, and t registers as well as the l and Alpha register.
 Beep prints "BEEP!" which can be suppressed by clearing flag 26.
 RCLFLAG recalls status of flags 0-63 to x regiater.
 STOFLAG Saves flag data in x register to flags 0-63.
-TIME does not display hundredths of seconds.
+TIME displays current time to millisecond resolution.
 FIX, SCI and ENG will accept values from 0 to 15.
 CC41 uses 16 decimal digits internally however only 15 can normally be displayed using FIX, SCI and ENG.  Setting flag 60 will display all sixteen digits in the current FIX, SCI or ENG formats regardless of the last FIX, SCI or ENG setting.
+CLD is present for compatibility but does not clear what has been output to the console.
 
 ### Labels
 CC41 supports global labels up to 8 characters in length while HP-41CX supports 7 characters.  Valid local labels for CC41 are labels a-z and A-Z except for l,x,y,z,t and L,X,Y,Z,T.
@@ -232,6 +233,7 @@ A maximum of 24 characters is allowed between double quotes in interactive mode 
 | atime24 | Append time in X register to Alpha register in 24 hour format.
 | atox | The value of the left most character in the Alpha register is placed in X and the Alpha register contents are shifted left one character.  A 0 is placed in X if the Alpha register is empty.
 | cla   | Clear the Alpha register.
+| cld   | Clear the display. Has no effect in CC41
 | clrg  | Clear all numbered memory registers 
 | clrgx | Clear registers starting at bbb, through eee incrementing by ii as specified in X by bbb.eeeii.
 | clsum | Clear statistics registers.  
@@ -419,4 +421,3 @@ Typing '90 tan' and return will cause CC41 to crash when running on MacOS.
 
 
     
-
