@@ -1,0 +1,214 @@
+@ This program is based on one that originally appeared in the HP-41C Standard Applications Handbook
+@ To start enable User mode with the USER command and enter FIN
+@ Use the commands N,INT,PV, PMT, and FV.
+@ This can be accomplished with the following CC41 command on one line:
+@ "fin.p41" getp user FIN
+LBL "FIN"
+XEQ a 
+STOP
+LBL A
+LBL N
+STO 01
+FS?C 22
+RTN
+RCL 04
+RCL 09
+/
+STO 00
+RCL 05
+-
+RCL 03
+RCL 00
+15 /
+LN
+RCL 09
+LN1+X
+/
+STO 01
+"N="
+ARCL X
+AVIEW
+RTN
+LBL B
+LBL INT
+STO 02
+1E2
+/
+STO 09
+1
++
+STO 07
+RCL 02
+FS?C 22
+RTN
+RCL 04
+X<>0?
+GTO 01
+RCL 05
+RCL 03
+/
+CHS
+RCL 01
+1/X
+Y^X
+1
+-
+STO 09
+GTO 00
+LBL 01
+RCL 05
+ABS
+RCL 04
+RCL 01
+*
+RCL 03
++
+ABS
+-
+RCL 04
+RCL 01
+*
+RCL 05
++
+ABS
+RCL 03
+ABS
+-
+*
+ENTER
+ABS
+/
+1E-9
+*
+STO 09
+LBL 06
+XEQ 08
+RCL 04
+*
+RCL 03
++
+RCL 05
+RCL 08
+*
++
+RCL 08
+RCL 07
+/
+RCL 01
+*
+STO 06
+1
+RCL 08
+-
+RCL 09
+/
+-
+RCL 04
+RCL 09
+/
+*
+RCL 05
+RCL 06
+*
+-
+/
+ST- 09
+ABS
+1E-7
+X<=Y?
+GTO 06
+RCL 09
+LBL 00
+1E2
+*
+STO 02
+"I="
+ARCL X
++"%"
+AVIEW
+RTN
+LBL C
+LBL PV
+STO 03
+FS?C 22
+RTN
+RCL 04
+XEQ 08
+*
+RCL 05
+RCL 08
+*
++
+CHS
+STO 03
+"PV=$"
+ARCL X
+AVIEW
+RTN
+LBL D
+LBL PMT
+STO 04
+FS?C 22
+RTN
+XEQ 08
+1/X
+RCL 03
+RCL 05
+RCL 08
+*
++
+*
+CHS
+STO 04
+"PMT=$"
+ARCL X
+AVIEW
+RTN
+LBL E
+LBL FV
+STO 05
+FS?C 22
+RTN
+XEQ 08
+RCL 04
+*
+RCL 03
++
+RCL 08
+/
+CHS
+STO 05
+"FV=$"
+ARCL X
+AVIEW
+RTN
+LBL 08
+1
+XEQ 09
+RCL 01
+CHS
+Y^X
+STO 08
+-
+RCL 09
+/
+RTN
+LBL 09
+RCL 09
+1
++
+STO 07
+RTN
+LBL a
+CLX
+STO 01
+STO 02
+STO 03
+STO 04
+STO 05
+STO 09
+"N, INT, PV, PMT"
++", FV"
+AVIEW
+RTN
+END

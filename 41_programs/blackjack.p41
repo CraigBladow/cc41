@@ -1,0 +1,271 @@
+@ Blackjack based on a program appearing in HP-41C Standard Applications Handbook
+@ To start store a number between 0 and 1 in register 0 and store your initial bank in register 21
+@ Enable USER mode by typing USER or SF 27 and then shuffle with SH
+@ Enter the amount of your bet and DL.  For additional card enter HT and to stand enter ST.
+@ In CC41 this can be entered on one line:
+@ "blackjack.p41" sf 27 getp 100 sto 21 .555382111 sto 0 SH 5 DL
+LBL "CRD"
+CLA
+ASTO 19
+1
+STO 15
+RCL 00
+9821
+*
+.211327
++
+FRC
+STO 00
+RCL 14
+*
+INT
+1
++
+LBL 02
+RCL IND 15
+X>Y?
+GTO 03
+-
+ISG 15
+LBL 99
+GTO 02
+LBL 03
+DSE IND 15
+LBL 99
+DSE 14
+12
+RCL 14
+X>Y?
+GTO 04
+XEQ "SH"
+LBL 04
+RCL 15
+STO 16
+10
+X<=Y?
+GTO 00
+X<>Y
+STO 16
+1
+X=Y?
+GTO A
+CLA
+ARCL Y
+GTO 01
+LBL 00
+STO 16
+CLX
+10
+X=Y?
+GTO "10"
+1
++
+X=Y?
+GTO J
+1
++
+X=Y?
+GTO "Q"
+"K"
+GTO 01
+LBL A
+"A"
+CF 07
+GTO 01
+LBL "Q"
+"Q"
+GTO 01
+LBL J
+"J"
+GTO 01
+LBL "10"
+"10"
+LBL 01
+ASTO 19
+RCL 16
+RTN
+LBL "SH"
+FIX 0
+CF 29
+"SHUFFLING"
+AVIEW
+1.013
+ENTER
+8
+LBL 14
+STO IND Y
+ISG Y
+GTO 14
+104
+STO 14
+CLD
+CF 00
+CF 01
+CF 02
+CF 03
+CF 04
+RTN
+LBL "DL"
+CF 09
+SF 07
+ABS
+INT
+FS?C 22
+STO 22
+RCL 22
+STO 20
+SF 06
+CLA
+ASTO 26
+ASTO 25
+XEQ "CRD"
+RCL 15
+STO 17
+XEQ "CRD"
+STO 23
+CF 08
+FS? 07
+SF 08
+CLA
+ARCL 19
+ARCL 25
+ASTO 25
+"I SHOW "
+ARCL 25
+AVIEW
+SF 07
+0
+STO 24
+XEQ "CRD"
+XEQ "PH"
+XEQ "CRD"
+XEQ "PH"
+RCL 24
+10
+FS? 07
+CLX
++
+21
+X#Y?
+SF 09
+FS? 09
+RTN
+21.5
+STO 24
+1.5
+ST* 20
+"BLACKJACK"
+AVIEW
+LBL "ST"
+CF 06
+FS? 07
+GTO 05
+11
+RCL 24
+X>Y?
+GTO 05
+10
+ST+ 24
+LBL 05
+CF 07
+FS? 08
+SF 07
+RCL 17
+STO 15
+XEQ 04
+XEQ "DH"
+FS? 07
+GTO 07
+11
+RCL 23
+X#Y?
+GTO 07
+21.5
+STO 23
+"I HAVE BLACKJAC"
++"K"
+AVIEW
+GTO 07
+LBL 06
+XEQ "CRD"
+XEQ "DH"
+LBL 07
+FS? 06
+GTO 09
+FC? 09
+GTO 08
+RCL 23
+17
+X<=Y?
+GTO 08
+FS? 07
+GTO 06
+11
+RCL 23
+X>Y?
+GTO 06
+7
+X>Y?
+GTO 06
+10
+ST+ 23
+LBL 08
+21.5
+RCL 23
+X>Y?
+XEQ "DB"
+RCL 24
+-
+X=0?
+XEQ "P"
+X>0?
+SF 06
+LBL 09
+RCL 20
+FS? 06
+CHS
+ST+ 21
+"YOUR BANK IS $"
+ARCL 21
+AVIEW
+RTN
+LBL "HT"
+XEQ "CRD"
+XEQ "PH"
+RCL 24
+21.5
+X>Y?
+RTN
+"BUST"
+AVIEW
+GTO 05
+LBL "DB"
+"BUST"
+AVIEW
+0
+RTN
+LBL "PH"
+ST+ 24
+CLA
+ARCL 26
+ARCL 19
+ASTO 26
+"YOU HAVE "
+ARCL 26
+AVIEW
+RTN
+LBL "DH"
+ST+ 23
+CLA
+ARCL 25
+ARCL 19
+ASTO 25
+"I HAVE "
+ARCL 25
+AVIEW
+RTN
+LBL "P"
+"A PUSH"
+AVIEW
+ST* 20
+END

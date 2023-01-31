@@ -1,7 +1,7 @@
 
 # CC41 USER MANUAL 
 
-## Version 0.42.01 Alpha DECIMAL
+## Version 0.42.02 Alpha Decimal
 
 Copyright (C) 2023 Craig Bladow.  All rights reserved.
 
@@ -98,6 +98,7 @@ A very nice feature available is the ability to press the up and down arrows to 
 | reada |Read calculator status, program and memory contents from PATH + filename In a program ,filename length is limited to 8 characters. 
 | reads filename| Reads calculator status, written by WRTS, from PATH + filename.
 | usage | Prints how to call the CC41 executable.|
+| user | Toggles flag 27 which enables USER Mode.
 | wrta  | Write calculator status, program and memory contents to PATH + filename. In a program filename length is limited to 8 characters. 
 | wrts filename| Write calculator status to PATH + filename. In a program filename length is limited to 8 characters. Saves registers, x, y, z, t, and l. Saves flags 0-63 and the Alpha register. Saves Statistics registers base register and data memory size allocation. 
 
@@ -121,21 +122,25 @@ CC41 uses 16 decimal digits internally however only 15 can normally be displayed
 CLD is present for compatibility but does not clear what has been output to the console.
 
 ### Labels
-CC41 supports global labels up to 8 characters in length while HP-41CX supports 7 characters.  Valid local labels for CC41 are labels a-z and A-Z except for l,x,y,z,t and L,X,Y,Z,T.
+CC41 supports global labels up to 8 characters in length while HP-41CX supports 7 characters.  Global labels are case sensitive.  Valid local alpha labels for CC41 are labels a-z and A-Z except for l,x,y,z,t and L,X,Y,Z,T.
 
 ### Entry Using Upper and Lower Case
 Command entry and command short cuts are case insensitive.  File name and paths depend on your operating system settings. Program labels are case sensitive.
 
 ### Short Cut Commands
-s for SST.
+s for SST.{}
 b for BST.
 
+### User Mode
+User mode is toggled by the USER command which sets flag 27 when in user mode.  When in user mode XEQ is not required to execute a global label, just type in a valid global label and it will be treated as a built-in command.
+
 ### Text Entry
-Text entered between “ and “ will overwrite the contents of the Alpha register. Adding a ‘+’ or ‘|-‘ before the first “ will append the text to the contents of the Alpha Register.  Program labels following LBL, GTO, XEQ, READS, and filenames following WRTS, READA, WRTA, and READA do not require quotes.
+Text entered between “ and “ will overwrite the contents of the Alpha regiEster. Adding a ‘+’ or ‘|-‘ before the first “ will append the text to the contents of the Alpha Register (note 3).  Program labels following LBL, GTO, XEQ, READS, and filenames following WRTS, READA, WRTA, and READA do not require quotes.
 CC41 uses the more easily typed "alpha" version of the HP-41CX command set as opposed to the symbols appearing on the HP-41CX keyboard.  Some of the alpha commands contain symbols that do not commonly appear on computer keyboards.  The following is a list of those commands and the text equivalent.  Either command will be accepted in a program file. Numerous other symbols produced by online RAW file decoders will also be translated or ignored.
 Notes:
 1. "x<>y" is the CC41 command to swap the contents of the X and Y registers.
 2. Exponentiation is denoted by the '^' character e.g., x^2, y^x, e^x, 10^x, e^x-1.
+3. HP-41CX printed program listings include the append character inside the double quotes. For CC41 these characters will be placed in the Alpha register so editing of these lines is necessary.
 
 
 | HP-41CX | CC41   |
@@ -274,7 +279,7 @@ A maximum of 24 characters is allowed between double quotes in interactive mode 
 | about | Displays information about CC41 and a short summary to get started.
 | adv   | To be implemented.
 | aview | View the Alpha register.
-| cat   |  CAT 1 lists global lables in memory.  CAT 3 lists all CC41 commands. CAT 4 lists the files in the current directory. These are the only two CAT commands implemented.
+| cat   |  CAT 1 lists global lables in memory.  CAT 3 lists all CC41 commands. CAT 4 lists the files in the current directory. Cat 6 lists global labels if USER mode is enabled. These are the only CAT commands implemented.
 | changes | Displays recent software change information.
 | clk12 | 12 hour clock display.
 | clk24 | 24 hour clock display.
@@ -351,7 +356,7 @@ Data and text file operations are not currently supported in CC41.
 | ----- | ------------ |
 | pdir | List files in the directory pointed to by PATH.
 | emdir | List files in the default directory.
-| getp  | Reads a program into memory, replacing the last program in memory. Uses PATH plus the filename stored in the Alpha Register. If getsub is commanded from a running program, execution resumes after the getsub command.
+| getp  | Reads a program into memory, replacing the last program in memory. Uses PATH plus the filename stored in the Alpha Register. If getsub is commanded from a running program, execution resumes after the getsub command. If the program has line numbers, every line must have a number, the line numbers do not have to be in any order and can be duplicated.  This is useful if you add comments to an existing program with line numbers.BM
 | getr | Copies registers from the file named in the Alpha register plus PATH into main memory.
 | getrx | Copies registers from the file named in the Alpha register plus PATH into main memory starting at sss and ending at eee where sss.ee is a number in the x register.
 | getsub| Reads a program into memory after all other programs. Uses PATH plus the filename stored in the Alpha Register and PATH. If getsub is commanded from a running program, execution resumes after the getsub command.
