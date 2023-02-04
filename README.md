@@ -1,7 +1,7 @@
 
 # CC41 USER MANUAL 
 
-## Version 0.42.02 Alpha Decimal
+## Version 0.42.03 Alpha
 
 Copyright (C) 2023 Craig Bladow.  All rights reserved.
 
@@ -54,13 +54,22 @@ To leave CC41 type "exit" or "off" and press the return key or press the key com
 In many linux distributions the key combination CRTL + ALT + T will open the terminal. Otherwise use the graphical menu system.
 To leave CC41 type "exit" or "off" and press the return key or press the key combination CTRL + d 
 ### After Opening a Console Window
-Navigate to the location where you copied CC41.  In Windows type "cc41" and press the return key.  In MacOS and Linux type "./cc41" and press the return key. CC41 starts by displaying version information and some tips to get started.  This is followed by a "Memory Cleared" message and a display of the current stack values, last x value, and the contents of the alpha register.
+Navigate to the location where you copied CC41.  In Windows type "cc41" and press the return key.  
+
+In MacOS and Linux type "./cc41" and press the return key. CC41 starts by displaying version information and some tips to get started.  This is followed by a "Memory Cleared" message and a display of the current stack values, last x value, and the contents of the alpha register.
+
 To see the list of supported commands, enter "cat 3" and press the return key.
+
 Commands are entered in upper or lower case with a space between each comand and number or followed by pressing the return key.
+
 Interactive mode is where you imput commands from the keyboard, press the return key and CC41 outputs the resultant stack and alpha registers.  When you type RUN and press the return key, CC41 will begin executing the current program, at the current program step.  If you type XEQ followed by a program label, CC41 will begin running that program at the program label location. You can also GTO a program label before typing RUN.
-Input is limited to 256 characters at a time. This limit includes commands, number, operations, alpha strings, and filenames. Input continues on the next entry line.  Commands that always expect a following parameter, such as SF, can be continued after the return key is pressed.  Commands that have optional following parameters, such as CLP and LIST, must be completed before pressing the return key. Numbers must also be completed before pressing the return key.
+
+Input is limited to 256 characters at a time. This limit includes commands, number, operations, alpha strings, and filenames. Input continues on the next entry line.  Commands that always expect a following parameter, such as SF, can be continued after the return key is pressed.  Commands that have optional following parameters, such as CLP and LIST, must be completed before pressing the return key. 
+
+Numbers must also be completed before pressing the return key.
 Numbers can be entered using keyboard keys for '+','-','.','0-9','e', and 'E'.
 If more than 16 number digits are entered the the 16th digit will be rounded.
+
 Text surrounded by double quotes, such as "Alphabet" will be placed in the Alpha Register.  Text following a command that expects text does need to be quoted. For example, GTO MYLABEL does not need double quotes.
 
 ### Command Line Options
@@ -420,9 +429,6 @@ Console display flags determine what is displayed as console output as a result 
 | 62 | Displays just the X register contents instead of the entire stack when set. This flag is clear on startup.
 | 63 | Display stack and alpha register contents when set. This flag is set on startup. Clearing this flag results in no output. 
 
-## Errata
-
-Typing '90 tan' and return will cause CC41 to crash when running on MacOS.
 
 
     
