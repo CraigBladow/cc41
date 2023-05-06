@@ -1,7 +1,7 @@
 
 # CC41 USER MANUAL 
 
-## Version 0.42.03 Alpha
+## Version 0.42.04 Alpha
 
 Copyright (C) 2023 Craig Bladow.  All rights reserved.
 
@@ -137,7 +137,7 @@ CC41 supports global labels up to 8 characters in length while HP-41CX supports 
 Command entry and command short cuts are case insensitive.  File name and paths depend on your operating system settings. Program labels are case sensitive.
 
 ### Short Cut Commands
-s for SST.{}
+s for SST.
 b for BST.
 
 ### User Mode
@@ -161,8 +161,8 @@ Notes:
 | Σ-      | sum-   |
 | ΣREG    | sumreg |
 | ΣREG?   | sumreg? |
-| X≠0?    | x<>0?  |
-| X≠Y?    | x<>y?  |
+| X≠0?    | x<>0? or x!=0? |
+| X≠Y?    | x<>y? or x!=y? |
 
 ### Unimplemented Commands
 A number of commands do not make sense in the context of CC41 vs. a handheld calculator.  There are also commands that are planned to be implemented in the future and are described as such.
@@ -317,7 +317,7 @@ A maximum of 24 characters is allowed between double quotes in interactive mode 
 | exit  | Exit CC41 program. Memory and status are not saved.
 | off   | Exit CC41 program. Memory and status are not saved.
 | prompt | Stops a running program and displays Alpha register prompt.  User enters the needed data and types RUN followed by pressing the return key.
-| pse   | Pauses running program for 2 seconds.
+| pse   | Pauses running program for 2 seconds. CC41 does not accept input during a pause.
 | tone  | Not yet implemented.
 
 ## Program and Flag Operations
@@ -358,6 +358,13 @@ Flag test operations will print 'yes' or 'no' when commanded in interactive mode
 | x>y?  | Test if x is greater than y.
 | xeq   | Execute a program starting at the given program label.
 
+## Progam Development Functions
+These features help in devloping and debugging programs.  A list of up to 25 registers may be monitored.  The contents of the registers will be displayed everytime the statck is displayed.  Registers can be added and removed one at a time using WATCH and UNWATCH respectively. WATCH and UNWATCH take the same arguments as VIEW.
+| Name  | Description                                       
+| ----- | ------------ |
+| clwatch | Clear the list of watch registers.
+| unwatch (0-999, ind, st)| Unwatch the referenced storage register   
+| watch (0-999, ind, st)| Watch the referenced storage register. 
 
 ## File Operations (Extended Memory)
 Data and text file operations are not currently supported in CC41.
@@ -402,7 +409,7 @@ Flags identified as "Reserved" are not currently implemented but may be used in 
 | 22-23 | Reserved (Data Input)
 | 24-25 | Reserved (Error Ignore)
 | 26    | Audio Enable, when set enables output to console from BEEP command.
-| 27    | Reserved (User Keyboard)
+| 27    | User Mode enabled when set.
 | 28-29 | Display Punctuation
 
 # System Flags
