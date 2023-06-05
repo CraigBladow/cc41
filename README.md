@@ -1,7 +1,7 @@
 
 # CC41 USER MANUAL 
 
-## Version 0.42.04 Alpha
+## Version 0.42.05 Alpha
 
 Copyright (C) 2023 Craig Bladow.  All rights reserved.
 
@@ -44,6 +44,8 @@ The Hewlett-Packard HP-41 CX Owner's Manual, volumes 1 and 2, is the recommended
 There is no installer needed for CC41. Download the executable corresponding to your computer's operating system and then copy the program from your download location to where you desire to run the program from. 
 ## Starting and Exiting CC41
 Pressing the CTRL and C keys simultaneously will exit an interactive CC41 session or, if a program is running, stop the running program.  The program can be resumed by entering the RUN command.
+## Enabling and Disabling Continuous Memory
+To enable continuous memory, which preserves the memory and state of the calculator between uses, clear flag 59 by issuing the command, "cf 59".  This creates or updates the file "cc41.mem" upon exiting CC41. If this file is present on startup, CC41 will prompt the user to choose to restore, keep without restoring, or delete the previous saved session's state. Note that if the default path has been modified from the default, cc41.mem will be written to the modified path and won't be found automatically.  A cc41.mem file can be loaded anytime using READA.
 ### Windows
 Open a console by pressing the Windows key located to the left of the spacebar and typing (without quotes)  "cmd".
 To leave CC41 type "exit" or "off" and press the return key.
@@ -132,6 +134,9 @@ CLD is present for compatibility but does not clear what has been output to the 
 
 ### Labels
 CC41 supports global labels up to 8 characters in length while HP-41CX supports 7 characters.  Global labels are case sensitive.  Valid local alpha labels for CC41 are labels a-z and A-Z except for l,x,y,z,t and L,X,Y,Z,T.
+
+### Comments
+Comments in programs may start anywhere and are prefaced by a '@' or a ';' character.  All text on a line following a comment character will be ignored.
 
 ### Entry Using Upper and Lower Case
 Command entry and command short cuts are case insensitive.  File name and paths depend on your operating system settings. Program labels are case sensitive.
@@ -372,7 +377,7 @@ Data and text file operations are not currently supported in CC41.
 | ----- | ------------ |
 | pdir | List files in the directory pointed to by PATH.
 | emdir | List files in the default directory.
-| getp  | Reads a program into memory, replacing the last program in memory. Uses PATH plus the filename stored in the Alpha Register. If getsub is commanded from a running program, execution resumes after the getsub command. If the program has line numbers, every line must have a number, the line numbers do not have to be in any order and can be duplicated.  This is useful if you add comments to an existing program with line numbers.BM
+| getp  | Reads a program into memory, replacing the last program in memory. Uses PATH plus the filename stored in the Alpha Register. If getsub is commanded from a running program, execution resumes after the getsub command. If the program has line numbers, every line must have a number, the line numbers do not have to be in any order and can be duplicated.  This is useful if you add comments to an existing program with line numbers. 
 | getr | Copies registers from the file named in the Alpha register plus PATH into main memory.
 | getrx | Copies registers from the file named in the Alpha register plus PATH into main memory starting at sss and ending at eee where sss.ee is a number in the x register.
 | getsub| Reads a program into memory after all other programs. Uses PATH plus the filename stored in the Alpha Register and PATH. If getsub is commanded from a running program, execution resumes after the getsub command.
@@ -425,7 +430,12 @@ Flags identified as "Reserved" are not currently implemented but may be used in 
 | 49    | Reserved (Low Battery)
 | 50 | Reserved (Message Displayed)
 | 55 | Reserved (Printer present)
-| 56-61| Reserved CC41 additional system Flags
+| 56-61| Reserved CC41 system Flags
+
+# Miscellaneous CC41 System Flags
+| Flag No.  | Description                                       
+| --------- | ------------ |
+| 59 | When cleared enables continuous memory functionality. This flag is set on startup.
 
 # Console Display Flags
 Console display flags determine what is displayed as console output as a result of user interaction. These flags can be set, cleared and tested by the user.
