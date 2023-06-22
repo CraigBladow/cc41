@@ -98,6 +98,7 @@ A very nice feature available is the ability to press the up and down arrows to 
 | drop  | Deletes current X contents and moves stack contents down. L not affected.
 | dropl | Deletes current L contents and moves stack down. X contents moved to L.
 | exit  | Exits CC41, similar to turning the HP-41CX off, however memory contents and status are not retained.
+| exeq | Executes the system command, shell script, or batch file named in the alpha register using the current specified path.
 | fview | Displays the flags register as a hexadecimal number.
 | gto. |Go to the following program line number. Replaces 'GTO .'
 | gto.. | Go to the end of Program Memory, create an END if the last program does not have one. Replaces 'GTO ..'
@@ -149,7 +150,7 @@ b for BST.
 User mode is toggled by the USER command which sets flag 27 when in user mode.  When in user mode XEQ is not required to execute a global label, just type in a valid global label and it will be treated as a built-in command.
 
 ### Text Entry
-Text entered between “ and “ will overwrite the contents of the Alpha regiEster. Adding a ‘+’ or ‘|-‘ before the first “ will append the text to the contents of the Alpha Register (note 3).  Program labels following LBL, GTO, XEQ, READS, and filenames following WRTS, READA, WRTA, and READA do not require quotes.
+Text entered between “ and “ will overwrite the contents of the Alpha regiEster. Adding a '>', ‘+’ or ‘|-‘ before the first “ will append the text to the contents of the Alpha Register (note 3).  Program labels following LBL, GTO, XEQ, READS, and filenames following WRTS, READA, WRTA, and READA do not require quotes.
 CC41 uses the more easily typed "alpha" version of the HP-41CX command set as opposed to the symbols appearing on the HP-41CX keyboard.  Some of the alpha commands contain symbols that do not commonly appear on computer keyboards.  The following is a list of those commands and the text equivalent.  Either command will be accepted in a program file. Numerous other symbols produced by online RAW file decoders will also be translated or ignored.
 Notes:
 1. "x<>y" is the CC41 command to swap the contents of the X and Y registers.
@@ -159,13 +160,13 @@ Notes:
 
 | HP-41CX | CC41   |
 | ------- | ------ |
-| CLΣ     | clsum  |
+| CLΣ     | cls  |
 | ENTER↑  | enter, space or return key   |
 | R↑      | rup    |
-| Σ+      | sum+   |
-| Σ-      | sum-   |
-| ΣREG    | sumreg |
-| ΣREG?   | sumreg? |
+| Σ+      | s+   |
+| Σ-      | s-   |
+| ΣREG    | sreg |
+| ΣREG?   | sreg? |
 | X≠0?    | x<>0? or x!=0? |
 | X≠Y?    | x<>y? or x!=y? |
 
@@ -255,7 +256,7 @@ A maximum of 24 characters is allowed between double quotes in interactive mode 
 | cld   | Clear the display. Has no effect in CC41
 | clrg  | Clear all numbered memory registers 
 | clrgx | Clear registers starting at bbb, through eee incrementing by ii as specified in X by bbb.eeeii.
-| clsum | Clear statistics registers.  
+| cls | Clear statistics registers.  
 | clst  | Clear the stack registers x, y, z, and t.
 | clx   | Clear the x register.
 | date  | Loads number for current date into the x register.
@@ -387,6 +388,7 @@ Data and text file operations are not currently supported in CC41.
 | reada |Read calculator status, program and memory contents from PATH + filename In a program ,filename length is limited to 8 characters.
 | reads filename| Reads calculator status, written by WRTS, from PATH plus filename. 
 | saver | Saves all registers in main memory to the file named in the Alpha register plus PATH
+| savep | Saves a program with the designated global label to the named file. Line numbers are included and may be turned off by setting flag 58. Output of SAVEP should be compatible with RAW file converter utilities comp41 from lifutils and also 41uc.
 | saverx | Copies registers to the file named in the Alpha register plus PATH from main memory starting at sss and ending at eee where sss.ee is a number in the x register.
 | wrta  | Write calculator status, program and memory contents to PATH + filename. In a program filename length is limited to 8 characters. 
 | wrts filename| Write calculator status to PATH + filename. In a program filename length is limited to 8 characters. Saves registers, x, y, z, t, and l. Saves flags 0-63 and the Alpha register. Saves Statistics registers base register and data memory size allocation. 
@@ -435,6 +437,7 @@ Flags identified as "Reserved" are not currently implemented but may be used in 
 # Miscellaneous CC41 System Flags
 | Flag No.  | Description                                       
 | --------- | ------------ |
+| 58 | Setting this flag disables line numbers being output by the LIST and SAVEP commands
 | 59 | When cleared enables continuous memory functionality. This flag is set on startup.
 
 # Console Display Flags
