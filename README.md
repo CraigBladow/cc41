@@ -1,7 +1,7 @@
 
 # CC41 USER MANUAL 
 
-## Version 0.42.05 Alpha
+## Version 0.45.01 Alpha
 
 Copyright (C) 2023 Craig Bladow.  All rights reserved.
 
@@ -95,6 +95,7 @@ A very nice feature available is the ability to press the up and down arrows to 
 | ashfl | Extended version of ASHF that shifts 8 characters instead of 6 in the Alpha register.
 | changes | Displays list of CC41 software changes.
 | clall | Clears all memories and resets CC41 to the initial state. Not programmable.
+| dec   | Input greater than 7,777,777,777,777,777 returns DATA ERROR. 
 | drop  | Deletes current X contents and moves stack contents down. L not affected.
 | dropl | Deletes current L contents and moves stack down. X contents moved to L.
 | exit  | Exits CC41, similar to turning the HP-41CX off, however memory contents and status are not retained.
@@ -102,13 +103,14 @@ A very nice feature available is the ability to press the up and down arrows to 
 | fview | Displays the flags register as a hexadecimal number.
 | gto. |Go to the following program line number. Replaces 'GTO .'
 | gto.. | Go to the end of Program Memory, create an END if the last program does not have one. Replaces 'GTO ..'
-| run   | Begins running the current program at the current step.
+| oct   | Input greater than 281,474,976,710,655 returns DATA ERROR.
 | path  | Sets the filesytem path to the contents of the alpha register.
 | path? | Displays the current filesystem path, if set.
 | path+ | Appends the contents of the alpha register to the current path. Maximum path characters limited to 233.
 | pdir | Lists contents of the directory that PATH points to.  Defaults to the current directory.
 | reada |Read calculator status, program and memory contents from PATH + filename In a program ,filename length is limited to 8 characters. 
 | reads filename| Reads calculator status, written by WRTS, from PATH + filename.
+| run   | Begins running the current program at the current step.
 | usage | Prints how to call the CC41 executable.|
 | user | Toggles flag 27 which enables USER Mode.
 | wrta  | Write calculator status, program and memory contents to PATH + filename. In a program filename length is limited to 8 characters. 
