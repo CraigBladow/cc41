@@ -1,9 +1,9 @@
 
 # CC41 USER MANUAL 
 
-## Version 0.45.01 Alpha
+## Version 0.45.02 Alpha
 
-Copyright (C) 2023 Craig Bladow.  All rights reserved.
+Copyright (C) 2024 Craig Bladow.  All rights reserved.
 
 ## Table of Contents
 [1. Introduction](#introduction)
@@ -30,12 +30,12 @@ Copyright (C) 2023 Craig Bladow.  All rights reserved.
 
 [11. Flags](#flags)
 
-[12. Errata](#errata)
+[12. Error Numbers](#Error-Number-Table)
 
 ## Introduction
 ### Why CC41?
 CC41 is a re-creation of many of the functions of Hewlett Packard's HP-41CX calculator in software.  Most calculator programs recreate a graphical interface resembling a calculator requiring the user to either use a mouse to enter commands and numbers or use a somewhat non-intuitive keyboard mapping where one key on the PC's keyboard maps to a key on the graphical calculator. With CC41 you can quickly type a function such as "1/x" rather than having to memorize which keyboard key the function is mapped to.
-CC41 contains 1000 data memory registers (0-999) and 65535 program memory registers as well as 64 flags, numbered 0 to 63. Using PATH to navigate your computer’s filesystem CC41 can read programs using GETP and GETSUB and remove them with PCLPS. CC41 can automatically load a program on launch and optionally begin running it.  
+CC41 contains 1000 data memory registers, numbered 0 to 999, and 65535 program memory registers as well as 64 flags, numbered 0 to 63. Using PATH to navigate your computer’s filesystem CC41 can read programs using GETP and GETSUB and remove them with PCLPS. CC41 can automatically load a program on launch and optionally begin running it.  
 The VIEW and AVIEW commands can output results to the command window as the program runs and the TRACE and SST commands enable program debugging.
 While CC41 can be a touch typist’s calculator the two best features are that programs can be written in your favorite text editor which then run incredibly fast on your computer compared to the original HP-41CX. 
 ### Additional Reference Material
@@ -94,10 +94,12 @@ A very nice feature available is the ability to press the up and down arrows to 
 | arcl  | Extended version of ARCL that recalls 8 characters from a memory to the Alpha register instead of 6.
 | ashfl | Extended version of ASHF that shifts 8 characters instead of 6 in the Alpha register.
 | changes | Displays list of CC41 software changes.
+| clerr | Set the error number to 0 indicating no error (see ERRNO).
 | clall | Clears all memories and resets CC41 to the initial state. Not programmable.
 | dec   | Input greater than 7,777,777,777,777,777 returns DATA ERROR. 
 | drop  | Deletes current X contents and moves stack contents down. L not affected.
 | dropl | Deletes current L contents and moves stack down. X contents moved to L.
+| errno | Recalls the last error number to the X register. See [Error Numbers.](#Error-Number-Table)
 | exit  | Exits CC41, similar to turning the HP-41CX off, however memory contents and status are not retained.
 | exeq | Executes the system command, shell script, or batch file named in the alpha register using the current specified path.
 | fview | Displays the flags register as a hexadecimal number.
@@ -110,16 +112,17 @@ A very nice feature available is the ability to press the up and down arrows to 
 | pdir | Lists contents of the directory that PATH points to.  Defaults to the current directory.
 | reada |Read calculator status, program and memory contents from PATH + filename In a program ,filename length is limited to 8 characters. 
 | reads filename| Reads calculator status, written by WRTS, from PATH + filename.
-| run   | Begins running the current program at the current step.
+| run   | Begins running the current program at the current step. Clears the last error (see ERRNO).
 | usage | Prints how to call the CC41 executable.|
 | user | Toggles flag 27 which enables USER Mode.
 | wrta  | Write calculator status, program and memory contents to PATH + filename. In a program filename length is limited to 8 characters. 
 | wrts filename| Write calculator status to PATH + filename. In a program filename length is limited to 8 characters. Saves registers, x, y, z, t, and l. Saves flags 0-63 and the Alpha register. Saves Statistics registers base register and data memory size allocation. 
-
+| xail | Executes one or more commands contained in the Alpha register in line. All instructions in the Alpha register are executed. Branching due to a conditional in the Alpha register is delayed until xail completes. If any single conditional fails then the instruction following XAIL is skipped. The following commands are not allowed to be executed by XAIL: LBL, GTO, XEQ, EXEQ, RTN, STOP, PSE, PROMPT, END, XAIL and non-programmable commands. If an error is detected in the string of commands execution of the commands in the alpha register ceases.  If a program is running, the program is stopped unless flag 25 is set.
+| xtoa | Doesn't replicate the special characters displayed for some codes on HP-41CX.
 
 ### Different Command Behavior
 All memory, registers 0 through 999, may be directly referenced by STO, RCL, and other commands. Indirect access works also.
-SIZE has no affect as data memory size is fixed to 1000.
+SIZE and PSIZE have no affect as data memory size is fixed to 1000.
 SIZE? always returns 1000.
 User Flags number 0-63.
 Stack indirection, STO IND ST X and STO IND X will both work exactly the same.  CC41 will list commands referencing stack registers without ‘ST’.
@@ -136,7 +139,7 @@ CC41 uses 16 decimal digits internally however only 15 can normally be displayed
 CLD is present for compatibility but does not clear what has been output to the console.
 
 ### Labels
-CC41 supports global labels up to 8 characters in length while HP-41CX supports 7 characters.  Global labels are case sensitive.  Valid local alpha labels for CC41 are labels a-z and A-Z except for l,x,y,z,t and L,X,Y,Z,T.
+CC41 supports global labels up to 8 characters in length while HP-41CX supports 7 characters.  Global labels are case sensitive.  Valid local alpha labels for CC41 are labels a-z and A-Z except for l,x,y,z,t and L,X,Y,Z,T. Valid numeric labels are 0 through 999.
 
 ### Comments
 Comments in programs may start anywhere and are prefaced by a '@' or a ';' character.  All text on a line following a comment character will be ignored.
@@ -147,6 +150,7 @@ Command entry and command short cuts are case insensitive.  File name and paths 
 ### Short Cut Commands
 s for SST.
 b for BST.
+Prefacing a global label with '.' is a shortcut for XEQ. No intervening space is required.  For example, instead of XEQ TVM, typing .TVM will execute the label. This shortcut works in programs as well, but is expanded by LIST or SAVEP.
 
 ### User Mode
 User mode is toggled by the USER command which sets flag 27 when in user mode.  When in user mode XEQ is not required to execute a global label, just type in a valid global label and it will be treated as a built-in command.
@@ -269,7 +273,7 @@ A maximum of 24 characters is allowed between double quotes in interactive mode 
 | isg   | Increment the referenced register and skip the next program instruction if the counter is greater than the end value.
 | lastx | Recall register l  to x, lifting the stack.
 | posa | Finds the position of the character byte code or alpha character string in X, and returns the postion of the first character to the X register.  -1 indicates that the target was not found.
-| psize | Set number of data registers from program. Has no effect in CC41 and there are 0-999 memory registers.
+| psize | Set number of data registers from program. Has no effect in CC41 as there are 1000 memory registers numbered 0 to 999.
 | rup   | rotate the stack up, bringing t into x. 
 | rcl | Recall a memory value to the x register.
 | rdn |  rotate the stack down, putting x into t.
@@ -277,7 +281,7 @@ A maximum of 24 characters is allowed between double quotes in interactive mode 
 | regswap | The value sss.dddnnn in X specifes swapping the contents of nnn registers, starting  at register sss with registers beginning with ddd.
 | sumreg | Set the base memory register for the statistics registers.
 | sumreg? | Recall the base memory register value for the statistics registers to the x register.
-| size | Sets the number of data memory registers.  Has no effect in CC41 and there are 0-999 memory registers.
+| size | Sets the number of data memory registers.  Has no effect in CC41 as there are 1000 memory registers numbered 0 to 999.
 | size? | Always returns 1000. See SIZE.
 | st+ | Add the x register to the referenced memory location.
 | st- | Subtract the x register from the referenced memory location.
@@ -345,7 +349,7 @@ Flag test operations will print 'yes' or 'no' when commanded in interactive mode
 | gto   | Go to a program label.
 | gto.  | Go to a program line number.
 | gto.. | Go to the end of program memory and append and END statement to the last program if none is present.
-| lbl   | Program label. Valid numeric labels are 0-999. Alpha-numeric labels can be up to 8 characters in length. Invalid labels are x, y, z, t, l, X, Y, Z, T, and L. Numeric only and single alpha labels are local in scope to the current program, all other labels are globally accessible from any program in memory.
+| lbl   | Program label. Valid numeric labels are 0 through 999. Alpha-numeric labels can be up to 8 characters in length. Invalid labels are x, y, z, t, l, X, Y, Z, T, and L. Numeric only and single alpha labels are local in scope to the current program, all other labels are globally accessible from any program in memory.
 | list  | list the program from the current step. If followed by a number N, list N program lines from the current program step.
 | pclps| Programmable version of CLP.  Clears a program with the label as identified in the Alpha register.
 | rclflag | Recalls status of flags 0-63 to x regiater.
@@ -364,15 +368,15 @@ Flag test operations will print 'yes' or 'no' when commanded in interactive mode
 | x<=y? | Test if x is less than or equal to y.
 | x<y?  | Test if x is less than y.
 | x>y?  | Test if x is greater than y.
-| xeq   | Execute a program starting at the given program label.
+| xeq   | Execute a program starting at the given program label. XEQ does not clear errors (see ERRNO).
 
 ## Progam Development Functions
 These features help in devloping and debugging programs.  A list of up to 25 registers may be monitored.  The contents of the registers will be displayed everytime the statck is displayed.  Registers can be added and removed one at a time using WATCH and UNWATCH respectively. WATCH and UNWATCH take the same arguments as VIEW.
 | Name  | Description                                       
 | ----- | ------------ |
 | clwatch | Clear the list of watch registers.
-| unwatch (0-999, ind, st)| Unwatch the referenced storage register   
-| watch (0-999, ind, st)| Watch the referenced storage register. 
+| unwatch (0 to 999, ind, st)| Unwatch the referenced storage register   
+| watch (0 to 999, ind, st)| Watch the referenced storage register. 
 
 ## File Operations (Extended Memory)
 Data and text file operations are not currently supported in CC41.
@@ -416,7 +420,8 @@ Flags identified as "Reserved" are not currently implemented but may be used in 
 | 12-20 | Reserved (External Device Control)
 | 21    | Reserved (Printer Enable)
 | 22-23 | Reserved (Data Input)
-| 24-25 | Reserved (Error Ignore)
+| 24 | Reserved (RangeError Ignore)
+| 25 | Error Ignore
 | 26    | Audio Enable, when set enables output to console from BEEP command.
 | 27    | User Mode enabled when set.
 | 28-29 | Display Punctuation
@@ -450,6 +455,21 @@ Console display flags determine what is displayed as console output as a result 
 | 61 | When set suppresses "Reading/Writing filename.ext" messages when reading or writing files. This flag is clear on startup.
 | 62 | Displays just the X register contents instead of the entire stack when set. This flag is clear on startup.
 | 63 | Display stack and alpha register contents when set. This flag is set on startup. Clearing this flag results in no output. 
+
+## Error Number Table
+| Error No. | Description
+| --- | ------------ |
+| 0 | No Error
+| 1 | Data Error
+| 2 | Out of Range Error
+| 3 | Nonexistent 
+| 4 | Alpha Data
+| 5 | Flag Data
+| 6 | Memory Lost
+| 7 | Xail Error
+| 99 | Unknown Error
+
+
 
 
 
