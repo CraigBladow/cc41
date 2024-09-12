@@ -1,7 +1,7 @@
 
 # CC41 USER MANUAL 
 
-## Version 0.45.02 Alpha
+## Version 0.45.03 Alpha
 
 Copyright (C) 2024 Craig Bladow.  All rights reserved.
 
@@ -113,6 +113,7 @@ A very nice feature available is the ability to press the up and down arrows to 
 | reada |Read calculator status, program and memory contents from PATH + filename In a program ,filename length is limited to 8 characters. 
 | reads filename| Reads calculator status, written by WRTS, from PATH + filename.
 | run   | Begins running the current program at the current step. Clears the last error (see ERRNO).
+| trace | Display program step information as a program runs.
 | usage | Prints how to call the CC41 executable.|
 | user | Toggles flag 27 which enables USER Mode.
 | wrta  | Write calculator status, program and memory contents to PATH + filename. In a program filename length is limited to 8 characters. 
