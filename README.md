@@ -1,7 +1,7 @@
 
 # CC41 USER MANUAL 
 
-## Version 0.45.03 Alpha
+## Version 0.45.04 Alpha
 
 Copyright (C) 2024 Craig Bladow.  All rights reserved.
 
@@ -79,9 +79,9 @@ The default mode of operation is interactive mode if no options are provided.
 | Option |  Description  |
 | ------ | ------------- |
 | -i or -I | Start CC41 in interactive mode.
-| -l or -L [filename] | Loads a program into memory.
-| -x or -X [filename] | Loads a program into memory and begin running it.
-| -r or -R [filename] | Restores entire memory from a file, equivalent to READA command.
+| -l or -L [filename] | Load a program into memory.
+| -x or -X [filename] | Load a program into memory and begin running it.
+| -r or -R [filename] | Restore entire memory from a file, equivalent to READA command.
 
 ### Command Line History
 A very nice feature available is the ability to press the up and down arrows to navigate through previous commands issued to CC41.  In the Windows version of CC41 this feature works with no additional software installation needed.  For Linux and MacOS a utility called “rlwrap” needs to be installed. Once the the utility is installed then launch cc41 as follows: rlwrap ./cc41 .
@@ -103,6 +103,7 @@ A very nice feature available is the ability to press the up and down arrows to 
 | exit  | Exits CC41, similar to turning the HP-41CX off, however memory contents and status are not retained.
 | exeq | Executes the system command, shell script, or batch file named in the alpha register using the current specified path.
 | fview | Displays the flags register as a hexadecimal number.
+| getpr | Loads and then runs a program starting at the first line.  See GETP.
 | gto. |Go to the following program line number. Replaces 'GTO .'
 | gto.. | Go to the end of Program Memory, create an END if the last program does not have one. Replaces 'GTO ..'
 | oct   | Input greater than 281,474,976,710,655 returns DATA ERROR.
@@ -112,7 +113,9 @@ A very nice feature available is the ability to press the up and down arrows to 
 | pdir | Lists contents of the directory that PATH points to.  Defaults to the current directory.
 | reada |Read calculator status, program and memory contents from PATH + filename In a program ,filename length is limited to 8 characters. 
 | reads filename| Reads calculator status, written by WRTS, from PATH + filename.
+| rclst | Recall stack registers X,Y,Z,T, and L from the given memory location and 4 subsequent memories.
 | run   | Begins running the current program at the current step. Clears the last error (see ERRNO).
+| stost | Store stack registers X,Y,Z,T, and L in the given memory location and 4 subsequent memories.
 | trace | Display program step information as a program runs.
 | usage | Prints how to call the CC41 executable.|
 | user | Toggles flag 27 which enables USER Mode.
@@ -123,21 +126,40 @@ A very nice feature available is the ability to press the up and down arrows to 
 
 ### Different Command Behavior
 All memory, registers 0 through 999, may be directly referenced by STO, RCL, and other commands. Indirect access works also.
+
 SIZE and PSIZE have no affect as data memory size is fixed to 1000.
+
 SIZE? always returns 1000.
+
 User Flags number 0-63.
+
 Stack indirection, STO IND ST X and STO IND X will both work exactly the same.  CC41 will list commands referencing stack registers without ‘ST’.
+
 There is no need for ALPHA or PRGM mode with CC41.  Alpha text is entered directly between double quotes and programs are edited in your favorite text editor.
+
 The functions of the R/S key are replaced by the commands RUN and STOP.
+
 There are no key assignments in CC41.
+
 PRSTK prints x, y, z, and t registers as well as the l and Alpha register.
+
 Beep prints "BEEP!" which can be suppressed by clearing flag 26.
+
 RCLFLAG recalls status of flags 0-63 to x regiater.
-STOFLAG Saves flag data in x register to flags 0-63.
+
+STOFLAG Saves flag data in x register to flags 0-63. Viewing flag data is indicated by "Flag Data" in the display.
+
+Numeric operations on flag data result in a "FLAG DATA" instead of an "ALPHA DATA" error.
+
 TIME displays current time to millisecond resolution.
+
 FIX, SCI and ENG will accept values from 0 to 15.
+
 CC41 uses 16 decimal digits internally however only 15 can normally be displayed using FIX, SCI and ENG.  Setting flag 60 will display all sixteen digits in the current FIX, SCI or ENG formats regardless of the last FIX, SCI or ENG setting.
+
 CLD is present for compatibility but does not clear what has been output to the console.
+
+CC41 will not give an OUT OF RANGE error for: mdy 10.161582 -1 date+, while the HP 41CX will. 10.151582 is a valid date per the HP 41CX manual.  
 
 ### Labels
 CC41 supports global labels up to 8 characters in length while HP-41CX supports 7 characters.  Global labels are case sensitive.  Valid local alpha labels for CC41 are labels a-z and A-Z except for l,x,y,z,t and L,X,Y,Z,T. Valid numeric labels are 0 through 999.
@@ -151,7 +173,7 @@ Command entry and command short cuts are case insensitive.  File name and paths 
 ### Short Cut Commands
 s for SST.
 b for BST.
-Prefacing a global label with '.' is a shortcut for XEQ. No intervening space is required.  For example, instead of XEQ TVM, typing .TVM will execute the label. This shortcut works in programs as well, but is expanded by LIST or SAVEP.
+Prefacing a global label with '.' is a shortcut for XEQ. No intervening space is required.  For example, instead of XEQ TVM, typing .TVM will execute the label. This shortcut works with both local and global labels. This shortcut works in programs as well, but is expanded by LIST or SAVEP.
 
 ### User Mode
 User mode is toggled by the USER command which sets flag 27 when in user mode.  When in user mode XEQ is not required to execute a global label, just type in a valid global label and it will be treated as a built-in command.
@@ -301,7 +323,7 @@ A maximum of 24 characters is allowed between double quotes in interactive mode 
 | about | Displays information about CC41 and a short summary to get started.
 | adv   | To be implemented.
 | aview | View the Alpha register.
-| cat   |  CAT 1 lists global lables in memory.  CAT 3 lists all CC41 commands. CAT 4 lists the files in the current directory. Cat 6 lists global labels if USER mode is enabled. These are the only CAT commands implemented.
+| cat   |  CAT 1 lists global lables in memory.  CAT 3 lists all CC41 commands. CAT 4 lists the files in the current directory. Cat 6 lists global labels if USER mode is enabled. CAT 9 is CAT 3 with the output commands in one column. These are the only CAT commands implemented.
 | changes | Displays recent software change information.
 | clk12 | 12 hour clock display.
 | clk24 | 24 hour clock display.
@@ -421,7 +443,7 @@ Flags identified as "Reserved" are not currently implemented but may be used in 
 | 12-20 | Reserved (External Device Control)
 | 21    | Reserved (Printer Enable)
 | 22-23 | Reserved (Data Input)
-| 24 | Reserved (RangeError Ignore)
+| 24 | RangeError Ignore
 | 25 | Error Ignore
 | 26    | Audio Enable, when set enables output to console from BEEP command.
 | 27    | User Mode enabled when set.
@@ -435,12 +457,11 @@ Flags identified as "Reserved" are not currently implemented but may be used in 
 | 36-39 | Number of displayed digits page 160-161
 | 42-43   | Angular Mode page 186
 | 44 | Reserved (Continuous On)
-| 24-25 | Reserved (Error Ignore)
 | 48    | Reserved (Alpha Keyboard active)
 | 49    | Reserved (Low Battery)
 | 50 | Reserved (Message Displayed)
 | 55 | Reserved (Printer present)
-| 56-61| Reserved CC41 system Flags
+| 56-57 | Reserved CC41 system Flag
 
 # Miscellaneous CC41 System Flags
 | Flag No.  | Description                                       
