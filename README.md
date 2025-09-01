@@ -1,9 +1,9 @@
 
 # CC41 USER MANUAL 
 
-## Version 0.45.04 Alpha
+## Version 0.46.00 Alpha Beep!
 
-Copyright (C) 2024 Craig Bladow.  All rights reserved.
+Copyright (C) 2025 Craig Bladow.  All rights reserved.
 
 ## Table of Contents
 [1. Introduction](#introduction)
@@ -41,7 +41,7 @@ While CC41 can be a touch typist’s calculator the two best features are that p
 ### Additional Reference Material
 The Hewlett-Packard HP-41 CX Owner's Manual, volumes 1 and 2, is the recommended reference for most of the commands supported by CC41.  Differences, if any, between the HP-41CX commands and CC41 will be explained in this manual.
 ## Installation
-There is no installer needed for CC41. Download the executable corresponding to your computer's operating system and then copy the program from your download location to where you desire to run the program from. 
+There is no installer needed for CC41. Download the .zip file from [GitHub.com](https://github.com/CraigBladow/cc41). Uncompress the file and the copy the executable corresponding to your computer's operating system, as well as the file beep41.wav to where you desire to run the program from. 
 ## Starting and Exiting CC41
 Pressing the CTRL and C keys simultaneously will exit an interactive CC41 session or, if a program is running, stop the running program.  The program can be resumed by entering the RUN command.
 ## Enabling and Disabling Continuous Memory
@@ -68,11 +68,12 @@ Interactive mode is where you imput commands from the keyboard, press the return
 
 Input is limited to 256 characters at a time. This limit includes commands, number, operations, alpha strings, and filenames. Input continues on the next entry line.  Commands that always expect a following parameter, such as SF, can be continued after the return key is pressed.  Commands that have optional following parameters, such as CLP and LIST, must be completed before pressing the return key. 
 
-Numbers must also be completed before pressing the return key.
+Numbers must also be completed before pressing the return key. A number followed by a space or return key will cause the stack to lift and the new number to be placed in X with stack lift enabled.  This differs from ENTER which lifts the stack, duplicating the value in X and disabling stack lift.
 Numbers can be entered using keyboard keys for '+','-','.','0-9','e', and 'E'.
 If more than 16 number digits are entered the the 16th digit will be rounded.
+Hexadecimal numbers are recognized by prefixing with '0x' or '0X' followed by 0 to 16 hexadecimal characters. Prefixing is not necessary when working in the alpha register.
 
-Text surrounded by double quotes, such as "Alphabet" will be placed in the Alpha Register.  Text following a command that expects text does need to be quoted. For example, GTO MYLABEL does not need double quotes.
+Text surrounded by double quotes, such as "Alphabet" will be placed in the Alpha Register.  Text following a command that expects text does not need to be quoted. For example, GTO MYLABEL does not need double quotes.
 
 ### Command Line Options
 The default mode of operation is interactive mode if no options are provided.
@@ -111,6 +112,7 @@ A very nice feature available is the ability to press the up and down arrows to 
 | path? | Displays the current filesystem path, if set.
 | path+ | Appends the contents of the alpha register to the current path. Maximum path characters limited to 233.
 | pdir | Lists contents of the directory that PATH points to.  Defaults to the current directory.
+| rand | Generates a psuedo-random number based on Mersenne Twister MT19937. Numbers range from 0 to 2^32 - 1 with a uniform distribution.
 | reada |Read calculator status, program and memory contents from PATH + filename In a program ,filename length is limited to 8 characters. 
 | reads filename| Reads calculator status, written by WRTS, from PATH + filename.
 | rclst | Recall stack registers X,Y,Z,T, and L from the given memory location and 4 subsequent memories.
@@ -123,6 +125,25 @@ A very nice feature available is the ability to press the up and down arrows to 
 | wrts filename| Write calculator status to PATH + filename. In a program filename length is limited to 8 characters. Saves registers, x, y, z, t, and l. Saves flags 0-63 and the Alpha register. Saves Statistics registers base register and data memory size allocation. 
 | xail | Executes one or more commands contained in the Alpha register in line. All instructions in the Alpha register are executed. Branching due to a conditional in the Alpha register is delayed until xail completes. If any single conditional fails then the instruction following XAIL is skipped. The following commands are not allowed to be executed by XAIL: LBL, GTO, XEQ, EXEQ, RTN, STOP, PSE, PROMPT, END, XAIL and non-programmable commands. If an error is detected in the string of commands execution of the commands in the alpha register ceases.  If a program is running, the program is stopped unless flag 25 is set.
 | xtoa | Doesn't replicate the special characters displayed for some codes on HP-41CX.
+
+### Hexadecimal Commands
+| CC41  |  Description  |
+| ----- | ------------- |
+| and | Logical AND of two hexadecimal (flag data) numbers.
+| ad-h | Performs full 64 bit decimal to hexadecimal conversion in the alpha register
+| ah-d | Performs full 64 bit hexadecimal to decimal conversion in the alpha register
+| d-h | Convert decimal (0-9999999999999999) number in X to hexadecimal (flag data).
+| h-d | Convert hexadecimal (flag data) number (0x0-0x2386F26FC0FFFF) in X to decimal number in X.
+| h- | Subtract the hexadecimal (flag data) number in X from Y.
+| h+ | Add the two hexadecimal (flag data) numbers in X and Y.
+| harcl | Recall hexadecimal (flag data) numbers from stack or memory to the alpha register.
+| hasto | Store hexadecimal (flag data) numbers from the alpha register to stack or memory.
+| not | Logical NOT of the hexadecimal (flag data) number in X.
+| or  | Logical OR of two hexadecimal (flag data) numbers.
+| shfl | Shift hexadecimal (flag data) number left 0 to 64 bits.
+| shfr | Shift hexadecimal (flag data) number right 0 to 64 bits.
+| xor  | Logical XOR of two hexadecimal (flag data) numbers.
+
 
 ### Different Command Behavior
 All memory, registers 0 through 999, may be directly referenced by STO, RCL, and other commands. Indirect access works also.
@@ -143,7 +164,7 @@ There are no key assignments in CC41.
 
 PRSTK prints x, y, z, and t registers as well as the l and Alpha register.
 
-Beep prints "BEEP!" which can be suppressed by clearing flag 26.
+Beep prints "BEEP!" and uses the PC speaker to make the classic beep sound.  Output can be suppressed by clearing flag 26.
 
 RCLFLAG recalls status of flags 0-63 to x regiater.
 
@@ -154,6 +175,8 @@ Numeric operations on flag data result in a "FLAG DATA" instead of an "ALPHA DAT
 TIME displays current time to millisecond resolution.
 
 FIX, SCI and ENG will accept values from 0 to 15.
+
+SIN, COS and TAN return 0.0 for |X| >= 1e300.
 
 CC41 uses 16 decimal digits internally however only 15 can normally be displayed using FIX, SCI and ENG.  Setting flag 60 will display all sixteen digits in the current FIX, SCI or ENG formats regardless of the last FIX, SCI or ENG setting.
 
@@ -292,7 +315,8 @@ A maximum of 24 characters is allowed between double quotes in interactive mode 
 | date+ | Adds days in x register to date in y register.
 | ddays | Difference in days betweein dates in the y and x registers.
 | dow  | Returns the day of the week.
-| dse   | Decrement the referenced register and skip the next program instruction if the counter and the end value are equal.| enter |  By itself, will duplicate x on the stack. As a space character or pressing the return key is the same as enter, enter is normally only used in programs.  
+| dse   | Decrement the referenced register and skip the next program instruction if the counter and the end value are equal.
+| enter |  Will lift the stack, duplicating x on the stack and disabling stack lift. 
 | isg   | Increment the referenced register and skip the next program instruction if the counter is greater than the end value.
 | lastx | Recall register l  to x, lifting the stack.
 | posa | Finds the position of the character byte code or alpha character string in X, and returns the postion of the first character to the X register.  -1 indicates that the target was not found.
