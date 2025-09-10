@@ -1,7 +1,7 @@
 
 # CC41 USER MANUAL 
 
-## Version 0.46.00 Alpha Beep!
+## Version 0.46.01 Alpha Beep!
 
 Copyright (C) 2025 Craig Bladow.  All rights reserved.
 
@@ -117,6 +117,7 @@ A very nice feature available is the ability to press the up and down arrows to 
 | reads filename| Reads calculator status, written by WRTS, from PATH + filename.
 | rclst | Recall stack registers X,Y,Z,T, and L from the given memory location and 4 subsequent memories.
 | run   | Begins running the current program at the current step. Clears the last error (see ERRNO).
+| sst   | When followed by an optional number N, executes N number of steps.
 | stost | Store stack registers X,Y,Z,T, and L in the given memory location and 4 subsequent memories.
 | trace | Display program step information as a program runs.
 | usage | Prints how to call the CC41 executable.|
@@ -402,7 +403,7 @@ Flag test operations will print 'yes' or 'no' when commanded in interactive mode
 | rclflag | Recalls status of flags 0-63 to x regiater.
 | rtn   | Directs program to return to the calling program or exit.
 | run   | Start running the program at the current program step.
-| sst   | Execute one step of the program.
+| sst   | Execute one step of the program. When followed by an optional number N, executes N number of steps.
 | stoflag | Saves flag data in x register to flags 0-63.
 | stop  | Command in the running program to stop.
 | x=0?  | Test if x is equal to 0.
