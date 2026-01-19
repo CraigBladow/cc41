@@ -1,9 +1,9 @@
 
 # CC41 USER MANUAL 
 
-## Version 0.46.01 Alpha Beep!
+## Version 0.46.02 Alpha
 
-Copyright (C) 2025 Craig Bladow.  All rights reserved.
+Copyright (C) 2026 Craig Bladow.  All rights reserved.
 
 ## Table of Contents
 [1. Introduction](#introduction)
@@ -124,7 +124,7 @@ A very nice feature available is the ability to press the up and down arrows to 
 | user | Toggles flag 27 which enables USER Mode.
 | wrta  | Write calculator status, program and memory contents to PATH + filename. In a program filename length is limited to 8 characters. 
 | wrts filename| Write calculator status to PATH + filename. In a program filename length is limited to 8 characters. Saves registers, x, y, z, t, and l. Saves flags 0-63 and the Alpha register. Saves Statistics registers base register and data memory size allocation. 
-| xail | Executes one or more commands contained in the Alpha register in line. All instructions in the Alpha register are executed. Branching due to a conditional in the Alpha register is delayed until xail completes. If any single conditional fails then the instruction following XAIL is skipped. The following commands are not allowed to be executed by XAIL: LBL, GTO, XEQ, EXEQ, RTN, STOP, PSE, PROMPT, END, XAIL and non-programmable commands. If an error is detected in the string of commands execution of the commands in the alpha register ceases.  If a program is running, the program is stopped unless flag 25 is set.
+| xail | Executes one or more commands contained in the Alpha register in line. All instructions in the Alpha register are executed. Branching due to a conditional in the Alpha register is delayed until xail completes. If any single conditional fails then the instruction following XAIL is skipped. The following commands are not allowed to be executed by XAIL: LBL, GTO, XEQ, EXEQ, RTN, STOP,PCLPS, PSE, PROMPT, END, XAIL and non-programmable commands. If an error is detected in the string of commands execution of the commands in the alpha register ceases.  If a program is running, the program is stopped unless flag 25 is set.
 | xtoa | Doesn't replicate the special characters displayed for some codes on HP-41CX.
 
 ### Hexadecimal Commands
@@ -203,7 +203,9 @@ Prefacing a global label with '.' is a shortcut for XEQ. No intervening space is
 User mode is toggled by the USER command which sets flag 27 when in user mode.  When in user mode XEQ is not required to execute a global label, just type in a valid global label and it will be treated as a built-in command.
 
 ### Text Entry
-Text entered between “ and “ will overwrite the contents of the Alpha regiEster. Adding a '>', ‘+’ or ‘|-‘ before the first “ will append the text to the contents of the Alpha Register (note 3).  Program labels following LBL, GTO, XEQ, READS, and filenames following WRTS, READA, WRTA, and READA do not require quotes.
+Text entered between “ and “ will overwrite the contents of the Alpha register. Adding a '>', ‘+’ or ‘|-‘ before the first “ will append the text to the contents of the Alpha Register (note 3).  Alpha program labels following LBL, GTO, and XEQ work with and without double quotes.  
+Flenames following READS, WRTS, WRTA, and READA must not be double quoted.
+A program label following CLP must not be doubleb quoted otherwise it is treated as a text entry.
 CC41 uses the more easily typed "alpha" version of the HP-41CX command set as opposed to the symbols appearing on the HP-41CX keyboard.  Some of the alpha commands contain symbols that do not commonly appear on computer keyboards.  The following is a list of those commands and the text equivalent.  Either command will be accepted in a program file. Numerous other symbols produced by online RAW file decoders will also be translated or ignored.
 Notes:
 1. "x<>y" is the CC41 command to swap the contents of the X and Y registers.
@@ -388,7 +390,7 @@ Flag test operations will print 'yes' or 'no' when commanded in interactive mode
 | ----- | ----------- |
 | bst   | Step back one program line.
 | cf    | Clear flag.
-| clp   | Clear program.
+| clp   | Clear program. If followed by a program label, ex. CLP labelname (no quotes) deletes the program containing that label.  If not followed by a program label deletes the current program.
 | end   | End of program. 
 | fc?   | Test if flag is clear.
 | fc?c  | Test if flag is clear. Then clear the flag.
@@ -425,6 +427,10 @@ These features help in devloping and debugging programs.  A list of up to 25 reg
 | clwatch | Clear the list of watch registers.
 | unwatch (0 to 999, ind, st)| Unwatch the referenced storage register   
 | watch (0 to 999, ind, st)| Watch the referenced storage register. 
+| check labelname|  Is followed by a subroutine label and enables CHECK mode where the subroutine label is called after every program step. If the subroutine determines that the CHECK condition is met it uses the BREAK labelname command to jump to a label and the program will stop following a RTN to the program being debugged. Using STOST and RCLST to save and recall the stack and lastx values enables the break subroutine to not affect the state of the program being debugged. CHECK labelname may be used to change the labelname at any time. CHECK is not programmable.
+| clcheck | Disables CHECK mode.
+| break labelname | BREAK lablename jumps to the labelname and stops the program after the next RTN if CHECK lablename was set previously and the program identified by CHECK is running. If CHECK mode is not set it does nothing.
+
 
 ## File Operations (Extended Memory)
 Data and text file operations are not currently supported in CC41.
@@ -442,7 +448,7 @@ Data and text file operations are not currently supported in CC41.
 | reada |Read calculator status, program and memory contents from PATH + filename In a program ,filename length is limited to 8 characters.
 | reads filename| Reads calculator status, written by WRTS, from PATH plus filename. 
 | saver | Saves all registers in main memory to the file named in the Alpha register plus PATH
-| savep | Saves a program with the designated global label to the named file. Line numbers are included and may be turned off by setting flag 58. Output of SAVEP should be compatible with RAW file converter utilities comp41 from lifutils and also 41uc.
+| savep | Saves a program with the designated global label to the named file. For example "label, filename" savep will save the program containing 'label' to to file 'filename' at the current path. If 'label' is omitted then the current program is saved. Line numbers are included and may be turned off by setting flag 58. Output of SAVEP should be compatible with RAW file converter utilities comp41 from lifutils and also 41uc.
 | saverx | Copies registers to the file named in the Alpha register plus PATH from main memory starting at sss and ending at eee where sss.ee is a number in the x register.
 | wrta  | Write calculator status, program and memory contents to PATH + filename. In a program filename length is limited to 8 characters. 
 | wrts filename| Write calculator status to PATH + filename. In a program filename length is limited to 8 characters. Saves registers, x, y, z, t, and l. Saves flags 0-63 and the Alpha register. Saves Statistics registers base register and data memory size allocation. 
@@ -486,11 +492,13 @@ Flags identified as "Reserved" are not currently implemented but may be used in 
 | 49    | Reserved (Low Battery)
 | 50 | Reserved (Message Displayed)
 | 55 | Reserved (Printer present)
-| 56-57 | Reserved CC41 system Flag
+
 
 # Miscellaneous CC41 System Flags
 | Flag No.  | Description                                       
 | --------- | ------------ |
+| 56 | Reserved CC41 system flag
+| 57 | Setting this flag When BREAK mode is active causes the progam to stop. See BREAK and CLBREAK commands for more information.
 | 58 | Setting this flag disables line numbers being output by the LIST and SAVEP commands
 | 59 | When cleared enables continuous memory functionality. This flag is set on startup.
 
