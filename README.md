@@ -1,7 +1,7 @@
 
 # CC41 USER MANUAL 
 
-## Version 0.46.02 Alpha
+## Version 0.46.03 Alpha
 
 Copyright (C) 2026 Craig Bladow.  All rights reserved.
 
@@ -98,6 +98,7 @@ A very nice feature available is the ability to press the up and down arrows to 
 | clerr | Set the error number to 0 indicating no error (see ERRNO).
 | clall | Clears all memories and resets CC41 to the initial state. Not programmable.
 | dec   | Input greater than 7,777,777,777,777,777 returns DATA ERROR. 
+| dejavu | Clears the calculator and reloads the last program loaded.
 | drop  | Deletes current X contents and moves stack contents down. L not affected.
 | dropl | Deletes current L contents and moves stack down. X contents moved to L.
 | errno | Recalls the last error number to the X register. See [Error Numbers.](#Error-Number-Table)
