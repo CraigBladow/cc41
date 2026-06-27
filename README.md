@@ -1,7 +1,7 @@
 
 # CC41 USER MANUAL 
 
-## Version 0.46.03 Alpha
+## Version 0.46.04 Alpha
 
 Copyright (C) 2026 Craig Bladow.  All rights reserved.
 
@@ -83,6 +83,8 @@ The default mode of operation is interactive mode if no options are provided.
 | -l or -L [filename] | Load a program into memory.
 | -x or -X [filename] | Load a program into memory and begin running it.
 | -r or -R [filename] | Restore entire memory from a file, equivalent to READA command.
+| -s or -S [filename] | Suppress the starup messages except for MEMORY LOST.
+| -v or -V [filename] | Output the software version and exit.
 
 ### Command Line History
 A very nice feature available is the ability to press the up and down arrows to navigate through previous commands issued to CC41.  In the Windows version of CC41 this feature works with no additional software installation needed.  For Linux and MacOS a utility called “rlwrap” needs to be installed. Once the the utility is installed then launch cc41 as follows: rlwrap ./cc41 .
@@ -92,6 +94,7 @@ A very nice feature available is the ability to press the up and down arrows to 
 | CC41  |  Description  |
 | ----- | ------------- |
 | astol | Extended version of ASTO that stores 8 characters from the Alpha register in a memory instead of 6.
+| aversion | Appends the CC41 software version to the Alpha register.
 | arcl  | Extended version of ARCL that recalls 8 characters from a memory to the Alpha register instead of 6.
 | ashfl | Extended version of ASHF that shifts 8 characters instead of 6 in the Alpha register.
 | changes | Displays list of CC41 software changes.
@@ -118,14 +121,14 @@ A very nice feature available is the ability to press the up and down arrows to 
 | reads filename| Reads calculator status, written by WRTS, from PATH + filename.
 | rclst | Recall stack registers X,Y,Z,T, and L from the given memory location and 4 subsequent memories.
 | run   | Begins running the current program at the current step. Clears the last error (see ERRNO).
-| sst   | When followed by an optional number N, executes N number of steps.
+| sst   | Must be followed by RETURN key or an optional number N, executing one or N number of steps respectively. 
 | stost | Store stack registers X,Y,Z,T, and L in the given memory location and 4 subsequent memories.
 | trace | Display program step information as a program runs.
 | usage | Prints how to call the CC41 executable.|
 | user | Toggles flag 27 which enables USER Mode.
 | wrta  | Write calculator status, program and memory contents to PATH + filename. In a program filename length is limited to 8 characters. 
 | wrts filename| Write calculator status to PATH + filename. In a program filename length is limited to 8 characters. Saves registers, x, y, z, t, and l. Saves flags 0-63 and the Alpha register. Saves Statistics registers base register and data memory size allocation. 
-| xail | Executes one or more commands contained in the Alpha register in line. All instructions in the Alpha register are executed. Branching due to a conditional in the Alpha register is delayed until xail completes. If any single conditional fails then the instruction following XAIL is skipped. The following commands are not allowed to be executed by XAIL: LBL, GTO, XEQ, EXEQ, RTN, STOP,PCLPS, PSE, PROMPT, END, XAIL and non-programmable commands. If an error is detected in the string of commands execution of the commands in the alpha register ceases.  If a program is running, the program is stopped unless flag 25 is set.
+| xail | Executes one or more commands contained in the Alpha register in line. All instructions in the Alpha register are executed. Branching due to a conditional in the Alpha register is delayed until xail completes. If any single conditional fails then the instruction following XAIL is skipped. The following commands are not allowed to be executed by XAIL: LBL, GTO, XEQ, EXEQ, RTN, STOP, PCLPS, PSE, PROMPT, END, XAIL and non-programmable commands. If an error is detected in the string of commands execution of the commands in the alpha register ceases.  If a program is running, the program is stopped unless flag 25 is set.
 | xtoa | Doesn't replicate the special characters displayed for some codes on HP-41CX.
 
 ### Hexadecimal Commands
@@ -349,7 +352,7 @@ A maximum of 24 characters is allowed between double quotes in interactive mode 
 | Name  | Description                            
 | ----- | ---------------------------------------|
 | about | Displays information about CC41 and a short summary to get started.
-| adv   | To be implemented.
+| adv   | Outputs a blank line. Unaffected by flags 21 or 55.
 | aview | View the Alpha register.
 | cat   |  CAT 1 lists global lables in memory.  CAT 3 lists all CC41 commands. CAT 4 lists the files in the current directory. Cat 6 lists global labels if USER mode is enabled. CAT 9 is CAT 3 with the output commands in one column. These are the only CAT commands implemented.
 | changes | Displays recent software change information.
@@ -401,7 +404,7 @@ Flag test operations will print 'yes' or 'no' when commanded in interactive mode
 | gto.  | Go to a program line number.
 | gto.. | Go to the end of program memory and append and END statement to the last program if none is present.
 | lbl   | Program label. Valid numeric labels are 0 through 999. Alpha-numeric labels can be up to 8 characters in length. Invalid labels are x, y, z, t, l, X, Y, Z, T, and L. Numeric only and single alpha labels are local in scope to the current program, all other labels are globally accessible from any program in memory.
-| list  | list the program from the current step. If followed by a number N, list N program lines from the current program step.
+| list  | list the program from the current step. Must be followed by RETURN key or an optional number N. If followed by a number N, list N program lines from the current program step.
 | pclps| Programmable version of CLP.  Clears a program with the label as identified in the Alpha register.
 | rclflag | Recalls status of flags 0-63 to x regiater.
 | rtn   | Directs program to return to the calling program or exit.
@@ -419,6 +422,12 @@ Flag test operations will print 'yes' or 'no' when commanded in interactive mode
 | x<=y? | Test if x is less than or equal to y.
 | x<y?  | Test if x is less than y.
 | x>y?  | Test if x is greater than y.
+| x=nn? | Test if x is equal to the contens of register NN in y.
+| x<>nn? | Test if x is not equal to the contens of register NN in y.
+| x<nn? | Test if x is less than to the contens of register NN in y.
+| x<=nn? | Test if x is less than or equal to the contens of register NN in y.
+| x>nn? | Test if x is greater than to the contens of register NN in y.
+| x>=nn? | Test if x is greater than or equal to the contens of register NN in y.
 | xeq   | Execute a program starting at the given program label. XEQ does not clear errors (see ERRNO).
 
 ## Progam Development Functions
