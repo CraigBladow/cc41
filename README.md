@@ -1,7 +1,7 @@
 
 # CC41 USER MANUAL 
 
-## Version 0.46.04 Alpha
+## Version 0.46.05 Alpha
 
 Copyright (C) 2026 Craig Bladow.  All rights reserved.
 
@@ -14,83 +14,103 @@ Copyright (C) 2026 Craig Bladow.  All rights reserved.
 
 [4. Differences from HP 41CX commands](#differences-from-hp-41cx-commands)
 
-[4. Numeric Functions](#nummeric-functions)
+[5. Numeric Functions](#numeric-functions)
 
-[5. Alpha Register](#alpha-register)
+[6. Alpha Register](#alpha-register)
 
-[6. Stack, Data and Alpha Register Functions](#stack,-data-and-alpha-register-functions)
+[7. Stack, Data and Alpha Register Functions](#stack-data-and-alpha-register-functions)
 
-[7. Display and Information Functions](#display-and-information-functions)
+[8. Display and Information Functions](#display-and-information-functions)
 
-[8. Interactive Functions](#interactive-functions)
+[9. Interactive Functions](#interactive-functions)
 
-[9. Program and Flag Operations](#program-and-flag-operations)
+[10. Program and Flag Operations](#program-and-flag-operations)
 
-[10. Extended Memory (File) Operations](#extended-memory-(file)-operations)
+[11. Extended Functions Memory and File Operations](#extended-functions-memory-and-file-operations)
 
-[11. Flags](#flags)
+[12. Flags](#flags)
 
-[12. Error Numbers](#Error-Number-Table)
+[13. Error Numbers](#error-number-table)
 
 ## Introduction
+
 ### Why CC41?
 CC41 is a re-creation of many of the functions of Hewlett Packard's HP-41CX calculator in software.  Most calculator programs recreate a graphical interface resembling a calculator requiring the user to either use a mouse to enter commands and numbers or use a somewhat non-intuitive keyboard mapping where one key on the PC's keyboard maps to a key on the graphical calculator. With CC41 you can quickly type a function such as "1/x" rather than having to memorize which keyboard key the function is mapped to.
-CC41 contains 1000 data memory registers, numbered 0 to 999, and 65535 program memory registers as well as 64 flags, numbered 0 to 63. Using PATH to navigate your computer’s filesystem CC41 can read programs using GETP and GETSUB and remove them with PCLPS. CC41 can automatically load a program on launch and optionally begin running it.  
-The VIEW and AVIEW commands can output results to the command window as the program runs and the TRACE and SST commands enable program debugging.
+
+CC41 contains 1000 data memory registers, numbered 0 to 999, and 65535 program memory registers as well as 64 flags, numbered 0 to 63. 
+
+Using PATH to navigate your computer’s filesystem CC41 can read programs using GETP and GETSUB and remove them with PCLPS. CC41 can automatically load a program on launch and optionally begin running it.
+
+The VIEW and AVIEW commands can output results to the command window as the program runs and the TRACE, WATCH, and SST commands enable program debugging.
+
 While CC41 can be a touch typist’s calculator the two best features are that programs can be written in your favorite text editor which then run incredibly fast on your computer compared to the original HP-41CX. 
+
 ### Additional Reference Material
 The Hewlett-Packard HP-41 CX Owner's Manual, volumes 1 and 2, is the recommended reference for most of the commands supported by CC41.  Differences, if any, between the HP-41CX commands and CC41 will be explained in this manual.
+
 ## Installation
 There is no installer needed for CC41. Download the .zip file from [GitHub.com](https://github.com/CraigBladow/cc41). Uncompress the file and the copy the executable corresponding to your computer's operating system, as well as the file beep41.wav to where you desire to run the program from. 
+
+## Software Updates
+Download the latest release: [https://github.com/CraigBladow/cc41/releases](https://github.com/CraigBladow/cc41/releases)
+
 ## Starting and Exiting CC41
 Pressing the CTRL and C keys simultaneously will exit an interactive CC41 session or, if a program is running, stop the running program.  The program can be resumed by entering the RUN command.
+
 ## Enabling and Disabling Continuous Memory
-To enable continuous memory, which preserves the memory and state of the calculator between uses, clear flag 59 by issuing the command, "cf 59".  This creates or updates the file "cc41.mem" upon exiting CC41. If this file is present on startup, CC41 will prompt the user to choose to restore, keep without restoring, or delete the previous saved session's state. Note that if the default path has been modified from the default, cc41.mem will be written to the modified path and won't be found automatically.  A cc41.mem file can be loaded anytime using READA.
+To enable continuous memory, which preserves the memory and state of the calculator between uses, clear flag 59 by issuing the command, "cf 59".  This creates or updates the file "cc41.mem" upon exiting CC41. If this file is present on startup, CC41 will prompt the user to choose to restore, keep without restoring, or delete the previous saved session's state. 
+
+Note that if the default path has been modified, cc41.mem will be written to the modified path and won't be found automatically.  A cc41.mem file can be loaded anytime using READA.
+
 ### Windows
 Open a console by pressing the Windows key located to the left of the spacebar and typing (without quotes)  "cmd".
 To leave CC41 type "exit" or "off" and press the return key.
+
 ### Mac OS
 Open the Terminal application by pressing the 'command' and 'space' keys to open Spotlight search, type 'terminal' and hit return.
 To leave CC41 type "exit" or "off" and press the return key or press the key combination CTRL + d .
+
 ### Linux
-In many linux distributions the key combination CRTL + ALT + T will open the terminal. Otherwise use the graphical menu system.
-To leave CC41 type "exit" or "off" and press the return key or press the key combination CTRL + d 
+In many Linux distributions the key combination CTRL + ALT + T will open the terminal. Otherwise use the graphical menu system.
+To leave CC41 type "exit" or "off" and press the return key or press the key combination CTRL + d .
+
 ### After Opening a Console Window
-Navigate to the location where you copied CC41.  In Windows type "cc41" and press the return key.  
+Navigate to the location where you copied CC41.  In Windows type "cc41.exe" and press the return key.  
 
 In MacOS and Linux type "./cc41" and press the return key. CC41 starts by displaying version information and some tips to get started.  This is followed by a "Memory Cleared" message and a display of the current stack values, last x value, and the contents of the alpha register.
 
 To see the list of supported commands, enter "cat 3" and press the return key.
 
-Commands are entered in upper or lower case with a space between each comand and number or followed by pressing the return key.
+Commands are entered in upper or lower case with a space between each command and number or followed by pressing the return key.
 
-Interactive mode is where you imput commands from the keyboard, press the return key and CC41 outputs the resultant stack and alpha registers.  When you type RUN and press the return key, CC41 will begin executing the current program, at the current program step.  If you type XEQ followed by a program label, CC41 will begin running that program at the program label location. You can also GTO a program label before typing RUN.
+Interactive mode is where you input commands from the keyboard, press the return key and CC41 outputs the resultant stack and alpha registers.  When you type RUN and press the return key, CC41 will begin executing the current program, at the current program step.  If you type XEQ followed by a program label, CC41 will begin running that program at the program label location. You can also GTO a program label before typing RUN.
 
 Input is limited to 256 characters at a time. This limit includes commands, number, operations, alpha strings, and filenames. Input continues on the next entry line.  Commands that always expect a following parameter, such as SF, can be continued after the return key is pressed.  Commands that have optional following parameters, such as CLP and LIST, must be completed before pressing the return key. 
 
 Numbers must also be completed before pressing the return key. A number followed by a space or return key will cause the stack to lift and the new number to be placed in X with stack lift enabled.  This differs from ENTER which lifts the stack, duplicating the value in X and disabling stack lift.
 Numbers can be entered using keyboard keys for '+','-','.','0-9','e', and 'E'.
-If more than 16 number digits are entered the the 16th digit will be rounded.
-Hexadecimal numbers are recognized by prefixing with '0x' or '0X' followed by 0 to 16 hexadecimal characters. Prefixing is not necessary when working in the alpha register.
+If more than 16 number digits are entered the 16th digit will be rounded.
+Hexadecimal numbers are recognized by prefixing with '0x' or '0X' followed by 0 to 16 hexadecimal characters. Prefixing is not necessary when working hexadecimal numbers in the alpha register.
 
 Text surrounded by double quotes, such as "Alphabet" will be placed in the Alpha Register.  Text following a command that expects text does not need to be quoted. For example, GTO MYLABEL does not need double quotes.
 
 ### Command Line Options
 The default mode of operation is interactive mode if no options are provided.
+
 | Option |  Description  |
 | ------ | ------------- |
 | -i or -I | Start CC41 in interactive mode.
 | -l or -L [filename] | Load a program into memory.
 | -x or -X [filename] | Load a program into memory and begin running it.
 | -r or -R [filename] | Restore entire memory from a file, equivalent to READA command.
-| -s or -S [filename] | Suppress the starup messages except for MEMORY LOST.
-| -v or -V [filename] | Output the software version and exit.
+| -s or -S | Suppress the startup messages except for MEMORY LOST.
+| -v or -V | Output the software version and exit.
 
 ### Command Line History
-A very nice feature available is the ability to press the up and down arrows to navigate through previous commands issued to CC41.  In the Windows version of CC41 this feature works with no additional software installation needed.  For Linux and MacOS a utility called “rlwrap” needs to be installed. Once the the utility is installed then launch cc41 as follows: rlwrap ./cc41 .
+A very nice feature available is the ability to press the up and down arrows to navigate through previous commands issued to CC41.  In the Windows version of CC41 this feature works with no additional software installation needed.  For Linux and MacOS a utility called “rlwrap” needs to be installed. Once the utility is installed then launch cc41 as follows: rlwrap ./cc41 .
 
 ## Differences from HP 41CX commands
-### CC41 Additonal Commands
+### CC41 Additional Commands
 | CC41  |  Description  |
 | ----- | ------------- |
 | astol | Extended version of ASTO that stores 8 characters from the Alpha register in a memory instead of 6.
@@ -104,7 +124,7 @@ A very nice feature available is the ability to press the up and down arrows to 
 | dejavu | Clears the calculator and reloads the last program loaded.
 | drop  | Deletes current X contents and moves stack contents down. L not affected.
 | dropl | Deletes current L contents and moves stack down. X contents moved to L.
-| errno | Recalls the last error number to the X register. See [Error Numbers.](#Error-Number-Table)
+| errno | Recalls the last error number to the X register. See [Error Numbers.](#error-number-table)
 | exit  | Exits CC41, similar to turning the HP-41CX off, however memory contents and status are not retained.
 | exeq | Executes the system command, shell script, or batch file named in the alpha register using the current specified path.
 | fview | Displays the flags register as a hexadecimal number.
@@ -112,6 +132,7 @@ A very nice feature available is the ability to press the up and down arrows to 
 | gto. |Go to the following program line number. Replaces 'GTO .'
 | gto.. | Go to the end of Program Memory, create an END if the last program does not have one. Replaces 'GTO ..'
 | oct   | Input greater than 281,474,976,710,655 returns DATA ERROR.
+| os?   | Returns the name of the OS to the alpha register.
 | path  | Sets the filesytem path to the contents of the alpha register.
 | path? | Displays the current filesystem path, if set.
 | path+ | Appends the contents of the alpha register to the current path. Maximum path characters limited to 233.
@@ -126,6 +147,7 @@ A very nice feature available is the ability to press the up and down arrows to 
 | trace | Display program step information as a program runs.
 | usage | Prints how to call the CC41 executable.|
 | user | Toggles flag 27 which enables USER Mode.
+| version | Outputs software build, library, and operating system information.
 | wrta  | Write calculator status, program and memory contents to PATH + filename. In a program filename length is limited to 8 characters. 
 | wrts filename| Write calculator status to PATH + filename. In a program filename length is limited to 8 characters. Saves registers, x, y, z, t, and l. Saves flags 0-63 and the Alpha register. Saves Statistics registers base register and data memory size allocation. 
 | xail | Executes one or more commands contained in the Alpha register in line. All instructions in the Alpha register are executed. Branching due to a conditional in the Alpha register is delayed until xail completes. If any single conditional fails then the instruction following XAIL is skipped. The following commands are not allowed to be executed by XAIL: LBL, GTO, XEQ, EXEQ, RTN, STOP, PCLPS, PSE, PROMPT, END, XAIL and non-programmable commands. If an error is detected in the string of commands execution of the commands in the alpha register ceases.  If a program is running, the program is stopped unless flag 25 is set.
@@ -207,13 +229,21 @@ Prefacing a global label with '.' is a shortcut for XEQ. No intervening space is
 User mode is toggled by the USER command which sets flag 27 when in user mode.  When in user mode XEQ is not required to execute a global label, just type in a valid global label and it will be treated as a built-in command.
 
 ### Text Entry
-Text entered between “ and “ will overwrite the contents of the Alpha register. Adding a '>', ‘+’ or ‘|-‘ before the first “ will append the text to the contents of the Alpha Register (note 3).  Alpha program labels following LBL, GTO, and XEQ work with and without double quotes.  
+
+Text entered between “ and “ will overwrite the contents of the Alpha register. Adding a '>', ‘+’ or ‘|-‘ before the first “ will append the text to the contents of the Alpha Register (note 3).  Alpha program labels following LBL, GTO, and XEQ work with and without double quotes. 
+
 Flenames following READS, WRTS, WRTA, and READA must not be double quoted.
-A program label following CLP must not be doubleb quoted otherwise it is treated as a text entry.
+
+A program label following CLP must not be double quoted otherwise it is treated as an alpha register text entry.
+
 CC41 uses the more easily typed "alpha" version of the HP-41CX command set as opposed to the symbols appearing on the HP-41CX keyboard.  Some of the alpha commands contain symbols that do not commonly appear on computer keyboards.  The following is a list of those commands and the text equivalent.  Either command will be accepted in a program file. Numerous other symbols produced by online RAW file decoders will also be translated or ignored.
+
 Notes:
+
 1. "x<>y" is the CC41 command to swap the contents of the X and Y registers.
+
 2. Exponentiation is denoted by the '^' character e.g., x^2, y^x, e^x, 10^x, e^x-1.
+
 3. HP-41CX printed program listings include the append character inside the double quotes. For CC41 these characters will be placed in the Alpha register so editing of these lines is necessary.
 
 
@@ -303,7 +333,7 @@ A maximum of 24 characters is allowed between double quotes in interactive mode 
 | anum  | Constructs a number from the first string of number characters in the Alpha register. Sets flag 22 if a number is found. 
 | arcl  | Appends 6 characters from memory to Alpha register. 
 | arcll | Appends 8 characters from memory to Alpha register.  
-| arot  | Rotaes alpha register contents by X, left if X is positive, right if X is negative.
+| arot  | Rotates alpha register contents by X, left if X is positive, right if X is negative.
 | ashf  | Shift Alpha register left 6 characters.
 | ashfl | Shift Alpha register left 8 characters.
 | asto  | Copies the left 6 characters from the Alpha register to memory.  | 
@@ -330,6 +360,10 @@ A maximum of 24 characters is allowed between double quotes in interactive mode 
 | psize | Set number of data registers from program. Has no effect in CC41 as there are 1000 memory registers numbered 0 to 999.
 | rup   | rotate the stack up, bringing t into x. 
 | rcl | Recall a memory value to the x register.
+| rc+ | Add the referenced memory location to the x register.
+| rc- | Subtract the referenced memory location from the x register.
+| rc* | Muliply the x register by the referenced memory location by x and store the result in the x register.
+| rc/ | Divide the x register by the referenced memory location and store the result in the x register.
 | rdn |  rotate the stack down, putting x into t.
 | regmove | The value sss.dddnnn in X specifes copying the contents of nnn registers, starting  at register sss to registers beginning with ddd.
 | regswap | The value sss.dddnnn in X specifes swapping the contents of nnn registers, starting  at register sss with registers beginning with ddd.
@@ -368,18 +402,20 @@ A maximum of 24 characters is allowed between double quotes in interactive mode 
 | fix | Set the display format to fixed.
 | grad | Set the angle units to grads.
 | mdy | Set Month Day Year date format.
+| os?   | Returns the name of the OS to the alpha register.
 | prstk | Print the stack, l and Alpha register.
 | rad | Set the angle units to radians
 | sci | Set the display format to scientific.
 | trace | Display program step information as a program runs.
 | usage | Displays command line parameters for loading and running programs.
+| version | Outputs software build, library, and operating system information.
 | view | View the contents of the referenced memory.
 
 
 ## Interactive Functions
 | Name  | Description                                  
 | ----- | ----------- | 
-| beep  | Prints "BEEP!". Output can be suppressed by clearing flag 26.
+| beep  | Prints "BEEP!" and makes the classic beep sound. Output can be suppressed by clearing flag 26.
 | exit  | Exit CC41 program. Memory and status are not saved.
 | off   | Exit CC41 program. Memory and status are not saved.
 | prompt | Stops a running program and displays Alpha register prompt.  User enters the needed data and types RUN followed by pressing the return key.
@@ -430,8 +466,10 @@ Flag test operations will print 'yes' or 'no' when commanded in interactive mode
 | x>=nn? | Test if x is greater than or equal to the contens of register NN in y.
 | xeq   | Execute a program starting at the given program label. XEQ does not clear errors (see ERRNO).
 
-## Progam Development Functions
+## Program Development Functions
+
 These features help in devloping and debugging programs.  A list of up to 25 registers may be monitored.  The contents of the registers will be displayed everytime the statck is displayed.  Registers can be added and removed one at a time using WATCH and UNWATCH respectively. WATCH and UNWATCH take the same arguments as VIEW.
+
 | Name  | Description                                       
 | ----- | ------------ |
 | clwatch | Clear the list of watch registers.
@@ -442,12 +480,19 @@ These features help in devloping and debugging programs.  A list of up to 25 reg
 | break labelname | BREAK lablename jumps to the labelname and stops the program after the next RTN if CHECK lablename was set previously and the program identified by CHECK is running. If CHECK mode is not set it does nothing.
 
 
-## File Operations (Extended Memory)
+## Extended Functions Memory and File Operations
+
 Data and text file operations are not currently supported in CC41.
+
 | Name  | Description                                       
 | ----- | ------------ |
+| curfl | Makes the file named in the alpha register the current file.
+| curfl? | Places the current file name in the Alpha register.
 | pdir | List files in the directory pointed to by PATH.
 | emdir | List files in the default directory.
+| emdirx | Retrieve file information for Nth file in directory. N is provided by emdir.
+| emroom | Always returns 600 for the amount of extended memory registers available.
+| flsize | Returns the size of the file in the default directory named in the alpha register.
 | getp  | Reads a program into memory, replacing the last program in memory. Uses PATH plus the filename stored in the Alpha Register. If getsub is commanded from a running program, execution resumes after the getsub command. If the program has line numbers, every line must have a number, the line numbers do not have to be in any order and can be duplicated.  This is useful if you add comments to an existing program with line numbers. 
 | getr | Copies registers from the file named in the Alpha register plus PATH into main memory.
 | getrx | Copies registers from the file named in the Alpha register plus PATH into main memory starting at sss and ending at eee where sss.ee is a number in the x register.
@@ -469,6 +514,7 @@ Flags typically follow the HP-41CX conventions with flags 0-29 being user modifi
 Currently all flags are user modifiable, this may change in the future.
 
 # Flag Overview
+
 | Flag No.  | Description                                       
 | --------- | ------------ |
 | 0-10  | User Flags
@@ -477,7 +523,9 @@ Currently all flags are user modifiable, this may change in the future.
 | 62-63 | Console Output Flags
 
 # Control Flags
+
 Flags identified as "Reserved" are not currently implemented but may be used in a future version of CC41. They can currently be set, cleared and tested by the user.
+
 | Flag No.  | Description                                       
 | --------- | ------------ |
 | 11    | Reserved (Automatic Execution)
@@ -491,7 +539,9 @@ Flags identified as "Reserved" are not currently implemented but may be used in 
 | 28-29 | Display Punctuation
 
 # System Flags
+
 Flags identified as "Reserved" are not currently implemented but may be used in a future version of CC41. They can currently be set, cleared and tested by the user.
+
 | Flag No.  | Description                                       
 | --------- | ------------ |
 | 31    | Date Format page 242
@@ -505,6 +555,9 @@ Flags identified as "Reserved" are not currently implemented but may be used in 
 
 
 # Miscellaneous CC41 System Flags
+
+These flags are not present in the HP-41CX and are used to affect the operation and or output of some commands
+
 | Flag No.  | Description                                       
 | --------- | ------------ |
 | 56 | Reserved CC41 system flag
@@ -513,7 +566,9 @@ Flags identified as "Reserved" are not currently implemented but may be used in 
 | 59 | When cleared enables continuous memory functionality. This flag is set on startup.
 
 # Console Display Flags
+
 Console display flags determine what is displayed as console output as a result of user interaction. These flags can be set, cleared and tested by the user.
+
 | Flag No.  | Description                                       
 | --------- | ------------ |
 | 60 | When set will display the 16th digit in the number regardless of the current FIX, ENG and SCI setting.  This flag is clear on startup.
@@ -522,6 +577,9 @@ Console display flags determine what is displayed as console output as a result 
 | 63 | Display stack and alpha register contents when set. This flag is set on startup. Clearing this flag results in no output. 
 
 ## Error Number Table
+
+The following table lists the error number generated by CC41.  It is useful for testing error conditions with flag 25 set which allows the test program to run, detect that an error occur and then identify which error it was using the ERRNO command.
+
 | Error No. | Description
 | --- | ------------ |
 | 0 | No Error
