@@ -1,7 +1,7 @@
 
 # CC41 USER MANUAL 
 
-## Version 0.46.04 Alpha
+## Version 0.46.05 Alpha
 
 Copyright (C) 2026 Craig Bladow.  All rights reserved.
 
@@ -42,6 +42,8 @@ While CC41 can be a touch typist’s calculator the two best features are that p
 The Hewlett-Packard HP-41 CX Owner's Manual, volumes 1 and 2, is the recommended reference for most of the commands supported by CC41.  Differences, if any, between the HP-41CX commands and CC41 will be explained in this manual.
 ## Installation
 There is no installer needed for CC41. Download the .zip file from [GitHub.com](https://github.com/CraigBladow/cc41). Uncompress the file and the copy the executable corresponding to your computer's operating system, as well as the file beep41.wav to where you desire to run the program from. 
+## Software Updates
+Download the latest release: [https://github.com/CraigBladow/cc41/releases](https://github.com/CraigBladow/cc41/releases)
 ## Starting and Exiting CC41
 Pressing the CTRL and C keys simultaneously will exit an interactive CC41 session or, if a program is running, stop the running program.  The program can be resumed by entering the RUN command.
 ## Enabling and Disabling Continuous Memory
@@ -83,8 +85,8 @@ The default mode of operation is interactive mode if no options are provided.
 | -l or -L [filename] | Load a program into memory.
 | -x or -X [filename] | Load a program into memory and begin running it.
 | -r or -R [filename] | Restore entire memory from a file, equivalent to READA command.
-| -s or -S [filename] | Suppress the starup messages except for MEMORY LOST.
-| -v or -V [filename] | Output the software version and exit.
+| -s or -S | Suppress the starup messages except for MEMORY LOST.
+| -v or -V | Output the software version and exit.
 
 ### Command Line History
 A very nice feature available is the ability to press the up and down arrows to navigate through previous commands issued to CC41.  In the Windows version of CC41 this feature works with no additional software installation needed.  For Linux and MacOS a utility called “rlwrap” needs to be installed. Once the the utility is installed then launch cc41 as follows: rlwrap ./cc41 .
@@ -112,12 +114,13 @@ A very nice feature available is the ability to press the up and down arrows to 
 | gto. |Go to the following program line number. Replaces 'GTO .'
 | gto.. | Go to the end of Program Memory, create an END if the last program does not have one. Replaces 'GTO ..'
 | oct   | Input greater than 281,474,976,710,655 returns DATA ERROR.
+| os?   | Returns the name of the OS to the alpha register.
 | path  | Sets the filesytem path to the contents of the alpha register.
 | path? | Displays the current filesystem path, if set.
 | path+ | Appends the contents of the alpha register to the current path. Maximum path characters limited to 233.
 | pdir | Lists contents of the directory that PATH points to.  Defaults to the current directory.
 | rand | Generates a psuedo-random number based on Mersenne Twister MT19937. Numbers range from 0 to 2^32 - 1 with a uniform distribution.
-| reada |Read calculator status, program and memory contents from PATH + filename In a program ,filename length is limited to 8 characters. 
+| reada |Read calculator status, program and memory contents from PATH + filename In a program ,filename length is limited to 8 characters. READA may fail to load files created with earlier CC41 releases or may restore program instructions incorrectly.
 | reads filename| Reads calculator status, written by WRTS, from PATH + filename.
 | rclst | Recall stack registers X,Y,Z,T, and L from the given memory location and 4 subsequent memories.
 | run   | Begins running the current program at the current step. Clears the last error (see ERRNO).
@@ -126,6 +129,7 @@ A very nice feature available is the ability to press the up and down arrows to 
 | trace | Display program step information as a program runs.
 | usage | Prints how to call the CC41 executable.|
 | user | Toggles flag 27 which enables USER Mode.
+| version | Outputs software build, library, and operating system information.
 | wrta  | Write calculator status, program and memory contents to PATH + filename. In a program filename length is limited to 8 characters. 
 | wrts filename| Write calculator status to PATH + filename. In a program filename length is limited to 8 characters. Saves registers, x, y, z, t, and l. Saves flags 0-63 and the Alpha register. Saves Statistics registers base register and data memory size allocation. 
 | xail | Executes one or more commands contained in the Alpha register in line. All instructions in the Alpha register are executed. Branching due to a conditional in the Alpha register is delayed until xail completes. If any single conditional fails then the instruction following XAIL is skipped. The following commands are not allowed to be executed by XAIL: LBL, GTO, XEQ, EXEQ, RTN, STOP, PCLPS, PSE, PROMPT, END, XAIL and non-programmable commands. If an error is detected in the string of commands execution of the commands in the alpha register ceases.  If a program is running, the program is stopped unless flag 25 is set.
@@ -330,6 +334,10 @@ A maximum of 24 characters is allowed between double quotes in interactive mode 
 | psize | Set number of data registers from program. Has no effect in CC41 as there are 1000 memory registers numbered 0 to 999.
 | rup   | rotate the stack up, bringing t into x. 
 | rcl | Recall a memory value to the x register.
+| rc+ | Add the referenced memory location to the x register.
+| rc- | Subtract the referenced memory location from the x register.
+| rc* | Muliply the x register by the referenced memory location by x and store the result in the x register.
+| rc/ | Divide the x register by the referenced memory location and store the result in the x register.
 | rdn |  rotate the stack down, putting x into t.
 | regmove | The value sss.dddnnn in X specifes copying the contents of nnn registers, starting  at register sss to registers beginning with ddd.
 | regswap | The value sss.dddnnn in X specifes swapping the contents of nnn registers, starting  at register sss with registers beginning with ddd.
@@ -368,11 +376,13 @@ A maximum of 24 characters is allowed between double quotes in interactive mode 
 | fix | Set the display format to fixed.
 | grad | Set the angle units to grads.
 | mdy | Set Month Day Year date format.
+| os?   | Returns the name of the OS to the alpha register.
 | prstk | Print the stack, l and Alpha register.
 | rad | Set the angle units to radians
 | sci | Set the display format to scientific.
 | trace | Display program step information as a program runs.
 | usage | Displays command line parameters for loading and running programs.
+| version | Outputs software build, library, and operating system information.
 | view | View the contents of the referenced memory.
 
 
@@ -384,7 +394,9 @@ A maximum of 24 characters is allowed between double quotes in interactive mode 
 | off   | Exit CC41 program. Memory and status are not saved.
 | prompt | Stops a running program and displays Alpha register prompt.  User enters the needed data and types RUN followed by pressing the return key.
 | pse   | Pauses running program for 2 seconds. CC41 does not accept input during a pause.
-| tone  | Not yet implemented.
+| tone  | Plays one of ten pitches with `TONE 0` through `TONE 9`. Use `TONE IND 00` or `TONE IND X` to select a pitch from a register using the absolute value of its integer part. Clear flag 26 to mute playback. |
+
+TONE uses Windows system audio, macOS `afplay`, or a Linux audio player (`paplay`, `pw-play`, or `aplay`). Linux requires at least one of these players and a working audio device.
 
 ## Program and Flag Operations
 
@@ -442,12 +454,17 @@ These features help in devloping and debugging programs.  A list of up to 25 reg
 | break labelname | BREAK lablename jumps to the labelname and stops the program after the next RTN if CHECK lablename was set previously and the program identified by CHECK is running. If CHECK mode is not set it does nothing.
 
 
-## File Operations (Extended Memory)
+## File Operations (Extended Functions and Memory)
 Data and text file operations are not currently supported in CC41.
 | Name  | Description                                       
 | ----- | ------------ |
+| curfl | Makes the file named in the alpha register the current file.
+| curfl? | Places the current file name in the Alpha register.
 | pdir | List files in the directory pointed to by PATH.
 | emdir | List files in the default directory.
+| emdirx | Retrieve file information for Nth file in directory. N is provided by emdir.
+| emroom | Always returns 600 for the amount of extended memory registers available.
+| flsize | Returns the size of the file in the default directory named in the alpha register.
 | getp  | Reads a program into memory, replacing the last program in memory. Uses PATH plus the filename stored in the Alpha Register. If getsub is commanded from a running program, execution resumes after the getsub command. If the program has line numbers, every line must have a number, the line numbers do not have to be in any order and can be duplicated.  This is useful if you add comments to an existing program with line numbers. 
 | getr | Copies registers from the file named in the Alpha register plus PATH into main memory.
 | getrx | Copies registers from the file named in the Alpha register plus PATH into main memory starting at sss and ending at eee where sss.ee is a number in the x register.
@@ -455,7 +472,7 @@ Data and text file operations are not currently supported in CC41.
 | path  | Sets the filesytem path to the contents of the alpha register. Initializes to the current directory.
 | path? | Displays the current filesystem path.
 | path+ | Appends the contents of the alpha register to the current path. Maximum path length is limited to 233 characters.
-| reada |Read calculator status, program and memory contents from PATH + filename In a program ,filename length is limited to 8 characters.
+| reada |Read calculator status, program and memory contents from PATH + filename In a program ,filename length is limited to 8 characters. READA may fail to load files created with earlier CC41 releases or may restore program instructions incorrectly.
 | reads filename| Reads calculator status, written by WRTS, from PATH plus filename. 
 | saver | Saves all registers in main memory to the file named in the Alpha register plus PATH
 | savep | Saves a program with the designated global label to the named file. For example "label, filename" savep will save the program containing 'label' to to file 'filename' at the current path. If 'label' is omitted then the current program is saved. Line numbers are included and may be turned off by setting flag 58. Output of SAVEP should be compatible with RAW file converter utilities comp41 from lifutils and also 41uc.
